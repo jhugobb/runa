@@ -1,0 +1,4 @@
+/home/red/Desktop/curso/NL/2SEM/runa/build/CMakeFiles/edit_cache.dir
+/home/red/Desktop/curso/NL/2SEM/runa/build/CMakeFiles/rebuild_cache.dir
+/home/red/Desktop/curso/NL/2SEM/runa/build/CMakeFiles/runa.dir
+/home/red/Desktop/curso/NL/2SEM/runa/build/CMakeFiles/runa_automoc.dir

@@ -1,0 +1,261 @@
+<?xml version="1.0" encoding="UTF-8" standalone="yes" ?>
+<CodeBlocks_project_file>
+   <FileVersion major="1" minor="6" />
+   <Project>
+      <Option title="runa" />
+      <Option makefile_is_custom="1" />
+      <Option compiler="gcc" />
+      <Option virtualFolders="CMake Files\;CMake Files\..\;CMake Files\..\..\;CMake Files\..\..\..\;CMake Files\..\..\..\..\;CMake Files\..\..\..\..\..\;CMake Files\..\..\..\..\..\Qt1\;CMake Files\..\..\..\..\..\Qt1\5.10.0\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Widgets\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\;CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\;" />
+      <Build>
+      <Target title="all">
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 all" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="edit_cache">
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 edit_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="rebuild_cache">
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 rebuild_cache" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runa">
+         <Option output="/home/red/Desktop/curso/NL/2SEM/runa/build/runa" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_WIDGETS_LIB" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add option="-DQT_NO_DEBUG" />
+            <Add directory="/home/red/Desktop/curso/NL/2SEM/runa" />
+            <Add directory="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/./mkspecs/linux-g++" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtCore" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtGui" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtWidgets" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 runa" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runa/fast">
+         <Option output="/home/red/Desktop/curso/NL/2SEM/runa/build/runa" prefix_auto="0" extension_auto="0" />
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option object_output="./" />
+         <Option type="1" />
+         <Option compiler="gcc" />
+         <Compiler>
+            <Add option="-DQT_WIDGETS_LIB" />
+            <Add option="-DQT_GUI_LIB" />
+            <Add option="-DQT_CORE_LIB" />
+            <Add option="-DQT_NO_DEBUG" />
+            <Add directory="/home/red/Desktop/curso/NL/2SEM/runa" />
+            <Add directory="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/./mkspecs/linux-g++" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtCore" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtGui" />
+            <Add directory="/home/red/Qt1/5.10.0/gcc_64/include/QtWidgets" />
+            <Add directory="/usr/include" />
+            <Add directory="/usr/include/c++/5" />
+            <Add directory="/usr/include/c++/5/backward" />
+            <Add directory="/usr/include/x86_64-linux-gnu" />
+            <Add directory="/usr/include/x86_64-linux-gnu/c++/5" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include" />
+            <Add directory="/usr/lib/gcc/x86_64-linux-gnu/5/include-fixed" />
+            <Add directory="/usr/local/include" />
+         </Compiler>
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 runa/fast" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      <Target title="runa_automoc">
+         <Option working_dir="/home/red/Desktop/curso/NL/2SEM/runa/build" />
+         <Option type="4" />
+         <MakeCommands>
+            <Build command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 runa_automoc" />
+            <CompileFile command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 &quot;$file&quot;" />
+            <Clean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+            <DistClean command="/usr/bin/make -f &quot;/home/red/Desktop/curso/NL/2SEM/runa/build/Makefile&quot;  VERBOSE=1 clean" />
+         </MakeCommands>
+      </Target>
+      </Build>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/src/face.cpp">
+         <Option target="runa"/>
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/src/main.cpp">
+         <Option target="runa"/>
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/src/model.cpp">
+         <Option target="runa"/>
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/src/vertex.cpp">
+         <Option target="runa"/>
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/CMakeLists.txt">
+          <Option virtualFolder="CMake Files\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfig.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Widgets/Qt5WidgetsMacros.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Widgets\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfig.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbEglIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QJpegPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWebpPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWbmpPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QVirtualKeyboardPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QVncIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevKeyboardPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QOffscreenIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QWebGLIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTiffPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QMinimalIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevTouchScreenPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSEmulatorIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QMinimalEglIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSX11IntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevMousePlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTuioTouchPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QICOPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEvdevTabletPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QICNSPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QLinuxFbIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QTgaPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QComposePlatformInputContextPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QXcbGlxIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QEglFSKmsEglDeviceIntegrationPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QGifPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QGtk3ThemePlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5Gui_QIbusPlatformInputContextPlugin.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Gui/Qt5GuiConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Gui\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigVersion.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfig.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigExtras.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Core/Qt5CoreConfigExtrasMkspecDir.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\" />
+      </Unit>
+      <Unit filename="/home/red/Desktop/curso/NL/2SEM/runa/../../../../../Qt1/5.10.0/gcc_64/lib/cmake/Qt5Core/Qt5CoreMacros.cmake">
+          <Option virtualFolder="CMake Files\..\..\..\..\..\Qt1\5.10.0\gcc_64\lib\cmake\Qt5Core\" />
+      </Unit>
+   </Project>
+</CodeBlocks_project_file>
