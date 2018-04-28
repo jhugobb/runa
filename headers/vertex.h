@@ -5,17 +5,20 @@
 #include <QVector2D>
 #include <QVector3D>
 
-class Vertex
-{
-public:
-    Vertex(double x, double y, double z, double nx, double ny, double nz);
-    QVector3D coords;
-    QVector3D normal;
-    double cost;
-    QVector<Face> adjacent_faces;
-    addFace(Face f);
-    calculateCost();
-    bool equals(Vertex v);
+class Face;
+
+class Vertex {
+    public:
+        Vertex();
+        Vertex(QVector3D coordiates, QVector3D n);
+        Vertex(double x, double y, double z, double nx, double ny, double nz);
+        QVector3D *coords;
+        QVector3D *normal;
+        double cost;
+        QVector<Face*> *adjacent_faces;
+        void addFace(Face* f);
+        int calculateCost(int count);
+        bool equals(Vertex v);
 
 };
 

@@ -5,18 +5,22 @@
 #include <QTextStream>
 #include <QMatrix4x4>
 
+#include <iostream>
+
+using namespace std;
+
 // A Private Vertex class for vertex comparison
 // DO NOT include "vertex.h" or something similar in this file
-struct Vertex {
+struct Vertice {
 
     QVector3D coord;
     QVector3D normal;
     QVector2D texCoord;
 
-    Vertex() : coord(), normal(), texCoord(){}
-    Vertex(QVector3D coords, QVector3D normal, QVector3D texc): coord(coords), normal(normal), texCoord(texc){}
+    Vertice() : coord(), normal(), texCoord(){}
+    Vertice(QVector3D coords, QVector3D normal, QVector3D texc): coord(coords), normal(normal), texCoord(texc){}
 
-    bool operator==(const Vertex &other) const {
+    bool operator==(const Vertice &other) const {
         if (other.coord != coord)
                 return false;
         if (other.normal != normal)
@@ -37,7 +41,7 @@ Model::Model(QString filename) {
         QTextStream in(&file);
 
         QString line;
-        QStringList tokens;
+        QStringList tokens = QStringList();
 
         while(!in.atEnd()) {
             line = in.readLine();
@@ -70,6 +74,36 @@ Model::Model(QString filename) {
 
         // Allign all vertex indices with the right normal/texturecoord indices
         alignData();
+
+        // Create Vertex Objects
+        createVertexes();
+        if(file.open(QIODevice::ReadOnly)) {
+            int count = 0;
+            QTextStream in(&file);
+
+            QString line;
+            QStringList tokens = QStringList();
+
+            while(!in.atEnd()) {
+                line = in.readLine();
+                if (line.startsWith("#")) continue; // skip comments
+
+                tokens = line.split(" ", QString::SkipEmptyParts);
+                if (tokens[0] == "f" ) {
+                    count++;
+                    createFace(tokens);
+                }
+            }
+
+            file.close();
+            cout << "Nbr or faces: " << count << endl;
+            QVector<Vertex*> tmp;
+            for (Vertex* v : verticesObj) {
+                if (v->adjacent_faces->size() != 0)
+                    tmp.append(v);
+            }
+            verticesObj = tmp;
+        }
     }
 }
 
@@ -174,7 +208,6 @@ void Model::unitize() {
     vertices = tmp;
 }
 
-
 QVector<QVector3D> Model::getVertices() {
     return vertices;
 }
@@ -201,6 +234,10 @@ QVector<QVector2D> Model::getTextureCoords_indexed() {
 
 QVector<unsigned>  Model::getIndices() {
     return indices;
+}
+
+QVector<Vertex*> Model::getVertexObjs() {
+    return verticesObj;
 }
 
 QVector<float> Model::getVNInterleaved() {
@@ -322,7 +359,7 @@ void Model::parseFace(QStringList tokens) {
         elements = tokens[i].split("/");
         // -1 since .obj count from 1
         indices.append(elements[0].toInt()-1);
-
+        
         if ( elements.size() > 1 && ! elements[1].isEmpty() ) {
             texcoord_indices.append(elements[1].toInt()-1);
         }
@@ -331,6 +368,21 @@ void Model::parseFace(QStringList tokens) {
             normal_indices.append(elements[2].toInt()-1);
         }
     }
+}
+
+void Model::createFace(QStringList tokens) {
+    QStringList elements;
+
+    QList<int> vertexes = QList<int>();
+    QList<int> nidx = QList<int>();
+    for( int i = 1; i != tokens.size(); ++i ) {
+        elements = tokens[i].split("/");
+        // -1 since .obj count from 1
+        vertexes.append(elements[0].toInt()-1);
+    }
+
+    Face* f = new Face(verticesObj.at(vertexes[0]), verticesObj.at(vertexes[1]), verticesObj.at(vertexes[2]));
+    faces.append(f);
 }
 
 
@@ -348,7 +400,7 @@ void Model::alignData() {
     norms.reserve(vertices_indexed.size());
     QVector<QVector2D> texcs = QVector<QVector2D>();
     texcs.reserve(vertices_indexed.size());
-    QVector<Vertex> vs = QVector<Vertex>();
+    QVector<Vertice> vs = QVector<Vertice>();
 
     QVector<unsigned> ind = QVector<unsigned>();
     ind.reserve(indices.size());
@@ -368,7 +420,7 @@ void Model::alignData() {
             t = tex[texcoord_indices[i]];
         }
 
-        Vertex k = Vertex(v,n,t);
+        Vertice k = Vertice(v,n,t);
         if (vs.contains(k)) {
             // Vertex already exists, use that index
             ind.append(vs.indexOf(k));
@@ -415,5 +467,12 @@ void Model::unpackIndexes() {
         if ( hTexs ) {
             textureCoords.append(tex[texcoord_indices[i]]);
         }
+    }
+}
+
+void Model::createVertexes() {
+    for (int i = 0; i < vertices.size(); i++) {
+        Vertex* v = new Vertex(vertices.at(i), normals.at(i));
+        verticesObj.append(v);
     }
 }

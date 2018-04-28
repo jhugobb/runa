@@ -7,6 +7,9 @@
 #include <QVector2D>
 #include <QVector3D>
 
+#include "vertex.h"
+#include "face.h"
+
 /**
  * @brief The Model class
  *
@@ -35,6 +38,7 @@ public:
     QVector<QVector3D> getNormals_indexed();
     QVector<QVector2D> getTextureCoords_indexed();
     QVector<unsigned>  getIndices();
+    QVector<Vertex*> getVertexObjs();
 
     // Used for interleaving into one buffer for glDrawElements()
     QVector<float> getVNInterleaved_indexed();
@@ -57,11 +61,13 @@ private:
     void parseNormal(QStringList tokens);
     void parseTexture(QStringList tokens);
     void parseFace(QStringList tokens);
+    void createFace(QStringList tokens);
 
     // Alignment of data
     void alignData();
     void unpackIndexes();
-
+    void createVertexes();
+    
     // Intermediate storage of values
     QVector<QVector3D> vertices_indexed;
     QVector<QVector3D> normals_indexed;
@@ -71,6 +77,8 @@ private:
     QVector<QVector3D> vertices;
     QVector<QVector3D> normals;
     QVector<QVector2D> textureCoords;
+    QVector<Face*> faces;
+    QVector<Vertex*> verticesObj;
 
     // Utility storage
     QVector<unsigned> normal_indices;

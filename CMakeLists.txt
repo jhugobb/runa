@@ -1,5 +1,7 @@
 cmake_minimum_required(VERSION 2.8.12)
 
+SET(CMAKE_INSTALL_PREFIX /home/red/Qt1/5.10.0/gcc_64/lib/cmake/Qt5Widgets/)
+
 project(runa)
 
 set(CMAKE_INCLUDE_CURRENT_DIR ON)
@@ -16,7 +18,7 @@ get_target_property(QtCore_location Qt5::Core LOCATION)
 set(CMAKE_CXX_FLAGS "-Wall --std=c++14")
 
 # Set all CPP files to be source files
-file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp)
+file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)
 
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 

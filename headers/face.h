@@ -9,14 +9,14 @@
 
 #include "vertex.h"
 
-class Face
-{
-public:
-    Face(Vertex v1, Vertex v2, Vertex v3);
-    Vertex v1, v2, v3;
-    QVector3D n;
-    double area;
-    bool areTwins(Face f);
+class Face {
+    public:
+        Face();
+        Face(Vertex* v1, Vertex* v2, Vertex* v3);
+        Vertex v1, v2, v3;
+        QVector3D *n;
+        double area;
+        bool areTwins(Face f);
 };
 
-#endif // MODEL_H
+#endif // FACE_H
