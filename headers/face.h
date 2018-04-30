@@ -13,10 +13,12 @@ class Face {
     public:
         Face();
         Face(Vertex* v1, Vertex* v2, Vertex* v3);
-        Vertex v1, v2, v3;
+        Vertex* v1, *v2, *v3;
         QVector3D *n;
         double area;
-        bool areTwins(Face f);
+        bool areTwins(Face f, Vertex* v);
+        double normalFieldDeviation();
+        Vertex* vertexOf(Face f, Vertex* v);
 };
 
 #endif // FACE_H

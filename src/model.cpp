@@ -49,20 +49,22 @@ Model::Model(QString filename) {
 
             tokens = line.split(" ", QString::SkipEmptyParts);
 
+            // Notify Jiri about this bug
+            if (tokens.isEmpty()) continue;
             // Switch depending on first element
-            if (tokens[0] == "v") {
+            if (tokens.at(0) == "v") {
                 parseVertex(tokens);
             }
 
-            if (tokens[0] == "vn" ) {
+            if (tokens.at(0) == "vn" ) {
                 parseNormal(tokens);
             }
 
-            if (tokens[0] == "vt" ) {
+            if (tokens.at(0) == "vt" ) {
                 parseTexture(tokens);
             }
 
-            if (tokens[0] == "f" ) {
+            if (tokens.at(0) == "f" ) {
                 parseFace(tokens);
             }
         }
@@ -89,7 +91,7 @@ Model::Model(QString filename) {
                 if (line.startsWith("#")) continue; // skip comments
 
                 tokens = line.split(" ", QString::SkipEmptyParts);
-                if (tokens[0] == "f" ) {
+                if (tokens.at(0) == "f" ) {
                     count++;
                     createFace(tokens);
                 }
@@ -360,11 +362,11 @@ void Model::parseFace(QStringList tokens) {
         // -1 since .obj count from 1
         indices.append(elements[0].toInt()-1);
         
-        if ( elements.size() > 1 && ! elements[1].isEmpty() ) {
+        if (elements.size() > 1 && !elements[1].isEmpty() ) {
             texcoord_indices.append(elements[1].toInt()-1);
         }
 
-        if (elements.size() > 2 && ! elements[2].isEmpty() ) {
+        if (elements.size() > 2 && !elements[2].isEmpty() ) {
             normal_indices.append(elements[2].toInt()-1);
         }
     }

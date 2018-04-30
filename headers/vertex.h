@@ -4,6 +4,7 @@
 #include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <eigen3/Eigen/Dense>
 
 class Face;
 
@@ -16,9 +17,12 @@ class Vertex {
         QVector3D *normal;
         double cost;
         QVector<Face*> *adjacent_faces;
+        QVector<QPair<Face, Face>> twin_faces;
         void addFace(Face* f);
         int calculateCost(int count);
-        bool equals(Vertex v);
+        bool equals(Vertex* v);
+        Vertex* getOptimalEdge();
+        void getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
 
 };
 
