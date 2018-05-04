@@ -22,6 +22,7 @@ class Face {
         Vertex* vertexOf(Face *f, Vertex *v);
         void replace(Vertex *old, Vertex *actual);
         void recalculate();
+        bool isDegenerate();
 };
 
 #endif // FACE_H

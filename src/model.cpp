@@ -123,117 +123,114 @@ void Model::parseFace(QStringList tokens)
     {
         elements = tokens[i].split("/");
         // -1 since .obj count from 1
-        verts.append(vertices.at(elements[0].toInt() - 1));
+        if (elements.size() > 0 && !elements[0].isEmpty()) {
+            verts.append(vertices.at(elements[0].toInt() - 1));
+        }
         // TODO: Change to incorporate multiple normal vertices
         if (elements.size() > 2 && !elements[2].isEmpty() ) {
-            Vertex* v = vertices.at(elements[0].toInt() - 1);
-            v->addNormal(normals.at(elements[2].toInt() - 1));
-            vertices.replace(elements[0].toInt() - 1, v);
+            vertices.at(elements[0].toInt() - 1)->addNormal(normals.at(elements[2].toInt() - 1));
         }
     }
-
+    assert((verts.at(0)) != (verts.at(1)) && (verts.at(1)) != (verts.at(2)) && (verts.at(1)) != (verts.at(2)));
     Face *f = new Face(verts.at(0), verts.at(1), verts.at(2));
     faces.append(f);
 }
 
 // TODO: Implement unitize
-// /**
-//  * @brief getXLength Calculates the length of the element (assuming the vertexes composes an element) from the X axis perspective.
-//  * @param v Vertexes
-//  * @param N Number of vertexes
-//  * @return X Length
-//  */
-// float Model::getXLength () {
-//     float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-//     for(int i = 0 ; i < vertices.size() ; i++) {
-//         if (vertices.at(i).x() < min) {
-//             min = vertices.at(i).x();
-//         }
-//         else if (vertices.at(i).x() > max) {
-//             max = vertices.at(i).x();
-//         }
+/**
+ * @brief getXLength Calculates the length of the element (assuming the vertexes composes an element) from the X axis perspective.
+ * @param v Vertexes
+ * @param N Number of vertexes
+ * @return X Length
+ */
+float Model::getXLength () {
+    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
+    for(int i = 0 ; i < vertices.size() ; i++) {
+        if (vertices.at(i)->coords.x() < min) {
+            min = vertices.at(i)->coords.x();
+        }
+        else if (vertices.at(i)->coords.x() > max) {
+            max = vertices.at(i)->coords.x();
+        }
 
-//     }
-//     return (max - min);
-// }
+    }
+    return (max - min);
+}
 
-// /**
-//  * @brief getYLength Calculates the length of the element (assuming the vertexes composes an element) from the Z axis perspective.
-//  * @param v Vertexes
-//  * @param N Number of vertexes
-//  * @return Y Length
-//  */
-// float Model::getYLength () {
-//     float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-//     for(int i = 0 ; i < vertices.size() ; i++) {
-//         if (vertices.at(i).y() < min) {
-//             min = vertices.at(i).y();
-//         }
-//         else if (vertices.at(i).y() > max) {
-//             max = vertices.at(i).y();
-//         }
+/**
+ * @brief getYLength Calculates the length of the element (assuming the vertexes composes an element) from the Z axis perspective.
+ * @param v Vertexes
+ * @param N Number of vertexes
+ * @return Y Length
+ */
+float Model::getYLength () {
+    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
+    for(int i = 0 ; i < vertices.size() ; i++) {
+        if (vertices.at(i)->coords.y() < min) {
+            min = vertices.at(i)->coords.y();
+        }
+        else if (vertices.at(i)->coords.y() > max) {
+            max = vertices.at(i)->coords.y();
+        }
 
-//     }
-//     return (max - min);
-// }
+    }
+    return (max - min);
+}
 
-// /**
-//  * @brief getZLength Calculates the length of the element (assuming the vertexes composes an element) from the Z axis perspective.
-//  * @param v Vertexes
-//  * @param N Number of vertexes
-//  * @return Z Length
-//  */
-// float Model::getZLength () {
-//     float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-//     for(int i = 0 ; i < vertices.size() ; i++) {
-//         if (vertices.at(i).z() < min) {
-//             min = vertices.at(i)->.z();
-//         }
-//         else if (vertices.at(i).z() > max) {
-//             max = vertices.at(i).z();
-//         }
+/**
+ * @brief getZLength Calculates the length of the element (assuming the vertexes composes an element) from the Z axis perspective.
+ * @param v Vertexes
+ * @param N Number of vertexes
+ * @return Z Length
+ */
+float Model::getZLength () {
+    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
+    for(int i = 0 ; i < vertices.size() ; i++) {
+        if (vertices.at(i)->coords.z() < min) {
+            min = vertices.at(i)->coords.z();
+        }
+        else if (vertices.at(i)->coords.z() > max) {
+            max = vertices.at(i)->coords.z();
+        }
 
-//     }
-//     return (max - min);
-// }
+    }
+    return (max - min);
+}
 
-// /**
-//  * @brief getMaxLength Returns the greatest length from the 3 axis perspective of a model.
-//  * @param v Model.
-//  * @param N Number of vertexes.
-//  * @return Greatest length.
-//  */
-// float Model::getMaxLength () {
-//     float max = getXLength(), tmp;
+/**
+ * @brief getMaxLength Returns the greatest length from the 3 axis perspective of a model.
+ * @param v Model.
+ * @param N Number of vertexes.
+ * @return Greatest length.
+ */
+float Model::getMaxLength () {
+    float max = getXLength(), tmp;
 
-//     if ((tmp = getYLength()) > max) {
-//         max = tmp;
-//     }
+    if ((tmp = getYLength()) > max) {
+        max = tmp;
+    }
 
-//     if ((tmp = getZLength()) > max) {
-//         max = tmp;
-//     }
+    if ((tmp = getZLength()) > max) {
+        max = tmp;
+    }
 
-//     return max;
-// }
+    return max;
+}
 
 
-// /**
-//  * @brief Model::unitze Not Implemented yet!
-//  *
-//  * Unitize the model by scaling so that it fits a box with sides 1
-//  * and origin at 0,0,0
-//  * Usefull for models with different scales
-//  *
-//  */
-// void Model::unitize() {
-//     QMatrix4x4 m = QMatrix4x4();
-//     m.scale(1.0 / getMaxLength());
-//     QVector<QVector3D> tmp = QVector<QVector3D>();
+/**
+ * @brief Model::unitze Not Implemented yet!
+ *
+ * Unitize the model by scaling so that it fits a box with sides 1
+ * and origin at 0,0,0
+ * Usefull for models with different scales
+ *
+ */
+void Model::unitize() {
+    QMatrix4x4 m = QMatrix4x4();
+    m.scale(1.0 / getMaxLength());
 
-//     for (int i = 0 ; i < vertices.size() ; i++) {
-//         tmp.append(m * vertices.at(i));
-//     }
-
-//     vertices = tmp;
-// }
+    for (int i = 0 ; i < vertices.size() ; i++) {
+        vertices.at(i)->coords = m * vertices.at(i)->coords;
+    }
+}

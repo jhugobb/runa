@@ -9,25 +9,26 @@
 
 using namespace std;
 
-Vertex::Vertex() {}
-
-
 Vertex::Vertex(QVector3D coordinates, QVector3D n) {
     coords = QVector3D(coordinates);
     normal = QVector3D(n);
-    adjacent_faces = QVector<Face*>();
+    adjacent_faces = *(new QVector<Face*>());
+    twin_faces = *(new QMap<Vertex*, QPair<Face *, Face *>>());
     cost = 0;
 }
 
 Vertex::Vertex(QVector3D coordinates) {
     coords = QVector3D(coordinates);
     normal = QVector3D();
-    adjacent_faces = QVector<Face*>();
+    adjacent_faces = *(new QVector<Face*>());
+    twin_faces = *(new QMap<Vertex*, QPair<Face *, Face *>>());
     cost = 0;
 }
 
 void Vertex::addFace(Face *f) {
-    adjacent_faces.append(f);
+    if (!adjacent_faces.contains(f)) {
+        adjacent_faces.append(f);
+    }
 }
 
 void Vertex::addNormal(QVector3D n) {
@@ -36,9 +37,9 @@ void Vertex::addNormal(QVector3D n) {
 
 int Vertex::calculateCost(int count) {
     int size = adjacent_faces.size();
-    bool found;
     twin_faces.clear();
     int checked[size];
+    int found;
     for (int i = 0; i<size; i++) {
         checked[i] = 0;
     }
@@ -55,44 +56,37 @@ int Vertex::calculateCost(int count) {
 
             twins1.first = f;
             twins2.first = f;
+            
+            found = 0;
 
-            found = false;
-
-            for (j = i+1; j < size && !found; j++) {
+            for (j = i+1; j < size && (found < 2); j++) {
                 if((checked[j] < 2) && f->areTwins(adjacent_faces.at(j), this)) {
-                    twins1.second = adjacent_faces.at(j);
-                    found = true;
-                    checked[i]++;
+                    if (found == 0)
+                        twins1.second = adjacent_faces.at(j);
+                    if (found == 1)
+                        twins2.second = adjacent_faces.at(j);
+                    found++;
                     checked[j]++;
                 }
             }
-            if (found) {
-                twin_faces.append(twins1);
-                if (checked[i] < 2) {
-                    found = false;
-
-                    for (; j < size && !found; j++) {
-                        if((checked[j] < 2) && f->areTwins(adjacent_faces.at(j), this)) {
-                            twins2.second = adjacent_faces.at(j);
-                            found = true;
-                            checked[i]++;
-                            checked[j]++;
-                        }
-                    }
-                    if (found) {
-                        twin_faces.append(twins2);
-                    }
-                }    
+            if (found == 1) {
+                twin_faces.insert(twins1.first->vertexOf(twins1.second, this), twins1);
+            } else if (found == 2) {
+                twin_faces.insert(twins1.first->vertexOf(twins1.second, this), twins1);
+                twin_faces.insert(twins2.first->vertexOf(twins2.second, this), twins2);
             }
+            checked[i]+=found;
             
         }   
     }
     // TODO: Remove this testing
     bool t = false;
-    
-    for (QPair<Face*, Face*> tf : twin_faces) {
+
+    QMapIterator<Vertex*, QPair<Face *, Face *>> iter(twin_faces);
+    while (iter.hasNext()) {
         t = true;
-        // NFD
+        iter.next();
+        QPair<Face *, Face *> tf = iter.value();
         Face *f1 = tf.first, *f2 = tf.second;
         double c = (f1->area + f2->area) * (1.0f - (f1->n.x()*f2->n.x() + f1->n.y()*f2->n.y() + f1->n.z()*f2->n.z())); // a . b == a^T * b
         cost+=c;
@@ -116,15 +110,21 @@ Vertex *Vertex::getOptimalEdge() {
     Vertex* result;
     double maxCost = std::numeric_limits<double>::max();
     double cost;
-    for (QPair<Face *, Face *> tf : twin_faces) {
-        cost = tf.first->normalFieldDeviation();
-        cost += tf.second->normalFieldDeviation();
+    cout << "Size of twin faces: " << twin_faces.size() << endl;
+
+    QMapIterator<Vertex*, QPair<Face *, Face *>> i(twin_faces);
+    while (i.hasNext()) {
+        i.next();
+        QPair<Face *, Face *> tf = i.value();
+        Face *f1 = tf.first, *f2 = tf.second;
+        cost = f1->normalFieldDeviation();
+        cost += f2->normalFieldDeviation();
         if (cost < maxCost) {
             maxCost = cost;
-            result = tf.first->vertexOf(tf.second, this);
+            result = i.key();
+            assert(result != NULL);
         }
     }
-
     return result;
 }
 
@@ -143,28 +143,29 @@ void Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
     }
     result.first = resMatrix;
     result.second = resVector;
-    cout << "Determinant: " << resMatrix.determinant() << endl; 
 }
 
 QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, Vertex *old) {
     coords = newCoords;
-    for (Face *f : adjacent_faces) {
-        f->recalculate();
-        if (f->area == 0) {
-            adjacent_faces.removeAll(f);
-            result.append(f);
-        }
-    }
     for (Face *f : (old->adjacent_faces)) {
         f->replace(old, this);
-        if (f->area != 0)
-            adjacent_faces.append(f);
-        else result.append(f);
+        addFace(f);
     }
+    for (Face *f : adjacent_faces) {
+        f->recalculate();
+        if (f->isDegenerate()) {
+            adjacent_faces.removeAll(f);
+            if (!result.contains(f)) {
+                result.append(f);
+            }
+        }
+    }
+    assert(adjacent_faces.size() > 1);
     return result;
 }
 // TODO: optimize
 void Vertex::recalculateCost(int count) {
+    calculateCost(0);
     for (Face *f : adjacent_faces) {
         f->v1->calculateCost(count);
         f->v2->calculateCost(count);

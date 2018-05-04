@@ -22,6 +22,7 @@ int main(int argc, char *argv[])
     QString nfaces = QString(argv[2]);
     int numfaces = nfaces.toInt();
     Model m = Model(argv[1]);
+    m.unitize();
 
     cout << "Finished loading." << endl; 
     QVector<Vertex *> vertexes = m.getVertices();
@@ -36,6 +37,7 @@ int main(int argc, char *argv[])
         k++;
         count = v->calculateCost(count);
         vertex_heap.insert(v->cost, v);
+        
     }
     cout << "Calculation finished." << endl;
 
@@ -94,6 +96,7 @@ int main(int argc, char *argv[])
         QVector3D optimalCoords = QVector3D(optimalPoint[0], optimalPoint[1], optimalPoint[2]);
          //TODO: Normal?
 
+        facesToBeRemoved =  optimalVertex->replaceWith(optimalCoords, facesToBeRemoved, optimalVertex);
         facesToBeRemoved =  vi->replaceWith(optimalCoords, facesToBeRemoved, optimalVertex);
         for (Face *f : facesToBeRemoved) {
             faces.removeAll(f);
@@ -109,7 +112,7 @@ int main(int argc, char *argv[])
         cout << "Current number of Faces: " << faces.size() << endl;
         cout << "Current number of Vertices: " << vertexes.size() << endl;
     }
-    
+
     QString filename = QString(argv[1]);
     filename.replace(QString(".obj"), QString("-opt.obj"));
     FileCreator fileCreator = FileCreator(vertexes, faces, filename);
