@@ -16,6 +16,7 @@ void FileCreator::createFile() {
     {
         QTextStream stream(&file);
         for (Vertex *v : vertices) {
+            v->calculateNormal();
             QVector3D p = v->coords;
             QVector3D n = v->normal;
             stream << "vn " << n.x() << " " << n.y() << " " << n.z() << endl;

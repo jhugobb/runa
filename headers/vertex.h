@@ -25,7 +25,9 @@ class Vertex {
         Vertex *getOptimalEdge();
         void getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
         QVector<Face *> replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *old);
-        void recalculateCost(int count);
+        QVector<Vertex *> recalculateCost(int count, QVector<Vertex *> result);
+        QVector<Vertex *> getChanged();
+        void calculateNormal();
 };
 
 #endif

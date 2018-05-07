@@ -122,7 +122,6 @@ Vertex *Vertex::getOptimalEdge() {
         if (cost < maxCost) {
             maxCost = cost;
             result = i.key();
-            assert(result != NULL);
         }
     }
     return result;
@@ -147,28 +146,62 @@ void Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
 
 QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, Vertex *old) {
     coords = newCoords;
+    for (Face *f : adjacent_faces) {
+        f->replace(old, this);
+    }
     for (Face *f : (old->adjacent_faces)) {
         f->replace(old, this);
         addFace(f);
     }
+
     for (Face *f : adjacent_faces) {
-        f->recalculate();
         if (f->isDegenerate()) {
             adjacent_faces.removeAll(f);
             if (!result.contains(f)) {
                 result.append(f);
             }
-        }
+        } else f->recalculate();
     }
-    assert(adjacent_faces.size() > 1);
     return result;
 }
-// TODO: optimize
-void Vertex::recalculateCost(int count) {
-    calculateCost(0);
-    for (Face *f : adjacent_faces) {
-        f->v1->calculateCost(count);
-        f->v2->calculateCost(count);
-        f->v3->calculateCost(count);
+
+QVector<Vertex *> Vertex::recalculateCost(int count, QVector<Vertex *> result) {
+    
+    for (Vertex *v : result) {
+        v->calculateCost(count);
     }
+
+    return result;
+}
+
+QVector<Vertex *> Vertex::getChanged() {
+    QVector<Vertex *> result = *(new QVector<Vertex *>());
+    for (Face *f : adjacent_faces)
+    {
+        if (!result.contains(f->v1))
+        {
+            result.append(f->v1);
+        }
+        if (!result.contains(f->v2))
+        {
+            result.append(f->v2);
+        }
+        if (!result.contains(f->v3))
+        {
+            result.append(f->v3);
+        }
+    }
+    return result;
+}
+
+void Vertex::calculateNormal() {
+    QVector3D n;
+    double count = 0;
+    for (Face *f: adjacent_faces) {
+        count++;
+        normal = normal + f->area * (f->n);
+    }
+    normal = normal/count;
+    normal = n;
+    normal.normalize();
 }
