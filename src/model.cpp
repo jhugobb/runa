@@ -81,6 +81,9 @@ QVector<Vertex *> Model::getVertices()
 QVector<Face *> Model::getFaces() {
     return faces;
 }
+QMap<QPair<Vertex *, Vertex *>, HalfEdge *> Model::getEdges() {
+    return halfedges;
+}
 
 /**
  * @brief Model::getNumTriangles
@@ -131,8 +134,86 @@ void Model::parseFace(QStringList tokens)
             vertices.at(elements[0].toInt() - 1)->addNormal(normals.at(elements[2].toInt() - 1));
         }
     }
-    assert((verts.at(0)) != (verts.at(1)) && (verts.at(1)) != (verts.at(2)) && (verts.at(1)) != (verts.at(2)));
     Face *f = new Face(verts.at(0), verts.at(1), verts.at(2));
+    QPair<Vertex *, Vertex *> edge1, edge1twin, edge2, edge2twin, edge3, edge3twin;
+    
+    edge1.first = verts.at(0);
+    edge1.second = verts.at(1);
+    
+    edge1twin.first = verts.at(1);
+    edge1twin.second = verts.at(0);
+
+    edge2.first = verts.at(1);
+    edge2.second = verts.at(2);
+
+    edge2twin.first = verts.at(2);
+    edge2twin.second = verts.at(1);
+    
+    edge3.first = verts.at(2);
+    edge3.second = verts.at(0);
+
+    edge3twin.first = verts.at(0);
+    edge3twin.second = verts.at(2);
+
+    HalfEdge* he1 = new HalfEdge();
+    HalfEdge* he2 = new HalfEdge();
+    HalfEdge* he3 = new HalfEdge();
+    he1->nextEdge = he2;
+    he2->nextEdge = he3;
+    he3->nextEdge = he1;
+
+    if (!halfedges.contains(edge1)) {
+        verts.at(0)->edge = he1;
+        he1->next = verts.at(1);
+        he1->face = f;
+        halfedges.insert(edge1, he1);
+    } else {
+        he1 = halfedges.value(edge1);
+        he1->nextEdge = he2;
+        he3->nextEdge = he1;
+    }
+
+    if (halfedges.contains(edge1twin)) {
+        HalfEdge* he = halfedges.value(edge1twin);
+        he->twin = halfedges.value(edge1);
+        he->twin->twin = he;
+    }
+
+    if (!halfedges.contains(edge2)) {
+        verts.at(1)->edge = he2;
+        he2->next = verts.at(2);
+        he2->face = f;
+        halfedges.insert(edge2, he2);
+    } else {
+        he2 = halfedges.value(edge2);
+        he1->nextEdge = he2;
+        he2->nextEdge = he3;
+    }
+
+    if (halfedges.contains(edge2twin)) {
+        HalfEdge* he = halfedges.value(edge2twin);
+        he->twin = halfedges.value(edge2);
+        he->twin->twin = he;
+    }
+
+    if (!halfedges.contains(edge3)) {
+        verts.at(2)->edge = he3;
+        he3->next = verts.at(0);
+        he3->face = f;
+        f->edge = he3;
+        halfedges.insert(edge3, he3);
+    } else {
+        he3 = halfedges.value(edge3);
+        he2->nextEdge = he3;
+        he3->nextEdge = he1;
+    }
+
+    if (halfedges.contains(edge3twin)) {
+        HalfEdge* he = halfedges.value(edge3twin);
+        he->twin = halfedges.value(edge3);
+        he->twin->twin = he;
+    }
+
     faces.append(f);
 }
 

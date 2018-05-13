@@ -9,6 +9,7 @@
 
 #include "vertex.h"
 #include "face.h"
+#include "halfedge.h"
 
 /**
  * @brief The Model class
@@ -26,6 +27,7 @@ public:
 
     QVector<Vertex *> getVertices();
     QVector<Face *> getFaces();
+    QMap<QPair<Vertex *, Vertex *>, HalfEdge *> getEdges();
 
     bool hasNormals();
     bool hasTextureCoords();
@@ -50,6 +52,7 @@ private:
     QVector<Vertex*> vertices;
     QVector<QVector3D> normals;
     QVector<Face*> faces;
+    QMap<QPair<Vertex *, Vertex *>, HalfEdge *> halfedges;
 
     // Utility storage
     int numNormals;

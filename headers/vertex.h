@@ -8,6 +8,7 @@
 #include <eigen3/Eigen/Dense>
 
 class Face;
+class HalfEdge;
 
 class Vertex {
     public:
@@ -16,18 +17,17 @@ class Vertex {
         QVector3D coords;
         QVector3D normal;
         double cost;
-        QVector<Face *> adjacent_faces;
-        void addFace(Face *f);
-        QMap<Vertex *, QPair<Face *, Face *>> twin_faces;
+        HalfEdge *edge;
         void addNormal(QVector3D n);
         int calculateCost(int count);
         bool operator==(const Vertex &v2) const;
         Vertex *getOptimalEdge();
         void getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
-        QVector<Face *> replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *old);
+        QVector<Face *> replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *old, HalfEdge *he);
         QVector<Vertex *> recalculateCost(int count, QVector<Vertex *> result);
         QVector<Vertex *> getChanged();
         void calculateNormal();
+        HalfEdge* getEdge(Vertex *v);
 };
 
 #endif

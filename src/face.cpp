@@ -1,4 +1,4 @@
-#include "headers/vertex.h"
+
 #include "headers/face.h"
 
 #include <iostream>
@@ -8,9 +8,6 @@ using namespace std;
 Face::Face() {}
 
 Face::Face(Vertex* pos1, Vertex* pos2, Vertex* pos3) {
-    pos1->addFace(this);
-    pos2->addFace(this);
-    pos3->addFace(this);
     v1 = pos1;
     v2 = pos2;
     v3 = pos3;
@@ -77,4 +74,16 @@ bool Face::isDegenerate() {
     bool cond2 = !((v1 != v2) && (v2 != v3) && (v1 != v3));
 
     return cond1 && cond2;
+}
+
+void Face::changeEdges() {
+    if (v1->edge->face == this) {
+        v1->edge = v1->edge->twin->nextEdge;
+    }
+    if (v2->edge->face == this) {
+        v2->edge = v2->edge->twin->nextEdge;
+    }
+    if (v3->edge->face == this) {
+        v3->edge = v3->edge->twin->nextEdge;
+    }
 }

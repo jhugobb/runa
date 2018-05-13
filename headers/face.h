@@ -8,6 +8,7 @@
 #include <QVector3D>
 
 #include "vertex.h"
+#include "halfedge.h"
 
 class Face {
     public:
@@ -16,6 +17,7 @@ class Face {
         Vertex *v1, *v2, *v3;
         QVector3D n;
         double area;
+        HalfEdge *edge;
         bool operator==(const Face &f2) const;
         bool areTwins(Face *f, Vertex *v);
         double normalFieldDeviation();
@@ -23,6 +25,7 @@ class Face {
         void replace(Vertex *old, Vertex *actual);
         void recalculate();
         bool isDegenerate();
+        void changeEdges();
 };
 
 #endif // FACE_H
