@@ -127,8 +127,26 @@ int main(int argc, char *argv[])
         QVector3D optimalCoords = QVector3D(optimalPoint[0], optimalPoint[1], optimalPoint[2]);
         // Edge collapse 
         t = clock();
+
+        QVector<Vertex *> changed;
+        changed = optimalVertex->getChanged();
+
+        t = clock() - t;
+        time_taken = ((double)t) / CLOCKS_PER_SEC;
+        totalTimeReorder += time_taken;
+        cout << "Got all affected vertices in " << time_taken << " seconds." << endl;
+
+        t = clock();
+
         HalfEdge *edge = optimalVertex->getEdge(vi);
         facesToBeRemoved =  optimalVertex->replaceWith(optimalCoords, facesToBeRemoved, vi, edge);
+
+        t = clock() - t;
+        time_taken = ((double)t) / CLOCKS_PER_SEC;
+        totalTimeReorder += time_taken;
+        cout << "Collapsed the edge in " << time_taken << " seconds." << endl;
+
+        t = clock();
 
         for (Face *f : facesToBeRemoved) {
             f->changeEdges();
@@ -136,15 +154,28 @@ int main(int argc, char *argv[])
         }
         vertexes.removeAll(optimalVertex);
 
-        QVector<Vertex *> changed;
-        changed = vi->getChanged(); 
+        t = clock() - t;
+        time_taken = ((double)t) / CLOCKS_PER_SEC;
+        totalTimeReorder += time_taken;
+        cout << "Removed degenerate Faces and vertex in " << time_taken << " seconds." << endl;
+
+        t = clock();
+
         changed = vi->recalculateCost(count, changed);
+
+        t = clock() - t;
+        time_taken = ((double)t) / CLOCKS_PER_SEC;
+        totalTimeReorder += time_taken;
+        cout << "Recalculated in " << time_taken << " seconds." << endl;
+
+        t = clock();
+        // This is what takes long
         make_heap(heap.begin(), heap.end(), vertex_greater_than());
 
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Finished the collapse and reorder in " << time_taken << " seconds." << endl;
+        cout << "Finished the  reorder in " << time_taken << " seconds." << endl;
         cout << "Current number of Faces: " << faces.size() << endl;
         cout << "Current number of Vertices: " << vertexes.size() << endl;
         cout << "Current number of Vertices in the heap: " << heap.size() << endl;

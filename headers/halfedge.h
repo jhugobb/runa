@@ -13,8 +13,11 @@ class HalfEdge {
         HalfEdge *twin;
         HalfEdge *nextEdge;
         Face *face;
+        bool calculated;
         double cost;
-        void calculateCost(double *areaSum, double *costSum, QVector3D *normalField);
+        double calculateCost();
+        double getArea();
+        QVector3D getNormalField();
 };
 
 #endif // HALFEDGE_H

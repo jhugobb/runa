@@ -30,10 +30,16 @@ int Vertex::calculateCost(int count) {
     QVector3D normalField = QVector3D(0,0,0);
     HalfEdge *curr = edge;
     do {
-        curr->calculateCost(&areaSum, &costSum, &normalField);
+        areaSum += curr->getArea();
+        normalField = normalField + curr->getNormalField();
+        if (!curr->calculated) {
+            costSum += curr->calculateCost();
+            curr->calculated = true;
+            curr->twin->calculated = true;
+        } else costSum += curr->cost;
+
         curr = curr->twin->nextEdge;
     } while (curr != edge);
-    cout << costSum << " " << areaSum << endl;
     cost = costSum + ((areaSum) - normalField.length());
     return count;
 }
@@ -88,7 +94,9 @@ QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, V
         if (curr->face->isDegenerate()){
             curr->face->changeEdges();
             result.append(curr->face);
-        } 
+        }
+        curr->calculated = false;
+        curr->twin->calculated = false;
         curr = curr->nextEdge->twin;
     } while (curr != he->twin);
 
@@ -101,28 +109,18 @@ QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, V
 }
 
 QVector<Vertex *> Vertex::recalculateCost(int count, QVector<Vertex *> result) {
-    //TODO optimize to not calculate cost 2 times per edge
     for (Vertex *v : result) {
         v->calculateCost(count);
     }
-
     return result;
 }
 
 QVector<Vertex *> Vertex::getChanged() {
     QVector<Vertex *> result = *(new QVector<Vertex *>());
     HalfEdge *curr = edge;
-    Face *f;
     do {
-        f = curr->face;
-        if (!result.contains(f->v1)) {
-            result.append(f->v1);
-        }
-        if (!result.contains(f->v2)) {
-            result.append(f->v2);
-        }
-        if (!result.contains(f->v3)) {
-            result.append(f->v3);
+        if (!result.contains(curr->next)) {
+            result.append(curr->next);
         }
         curr = curr->twin->nextEdge;
     } while (curr != edge);
