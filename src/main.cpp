@@ -1,10 +1,14 @@
 #include <QCoreApplication>
-#include <QMap>
 #include <iostream>
-#include <algorithm>
+#include <map>
 #include <string>
 #include <eigen3/Eigen/Dense>
 #include <ctime>
+
+#include <list>
+#include <CGAL/Simple_cartesian.h>
+#include <CGAL/AABB_tree.h>
+#include <CGAL/AABB_traits.h>
 
 #include "headers/model.h"
 #include "headers/vertex.h"
@@ -16,9 +20,59 @@ struct vertex_greater_than
 {
     bool operator()(Vertex *const &a, Vertex *const &b) const
     {
-        return a->cost > b->cost;
+        return a->cost - b->cost;
     }
 };
+
+typedef CGAL::Simple_cartesian<double> K;
+// the custom triangles are stored into a vector
+typedef std::vector<Face>::const_iterator Iterator;
+
+// The following primitive provides the conversion facilities between
+// the custom triangle and point types and the CGAL ones
+struct Face_primitive
+{
+  public:
+    // this is the type of data that the queries returns. For this example
+    // we imagine that, for some reasons, we do not want to store the iterators
+    // of the vector, but raw pointers. This is to show that the Id type
+    // does not have to be the same as the one of the input parameter of the
+    // constructor.
+    typedef const Face *Id;
+    // CGAL types returned
+    typedef K::Point_3 Point;    // CGAL 3D point type
+    typedef K::Triangle_3 Datum; // CGAL 3D triangle type
+  private:
+    Id m_pt; // this is what the AABB tree stores internally
+  public:
+    Face_primitive() {} // default constructor needed
+    // the following constructor is the one that receives the iterators from the
+    // iterator range given as input to the AABB_tree
+    Face_primitive(Iterator it)
+        : m_pt(&(*it)) {}
+    const Id &id() const { return m_pt; }
+    // utility function to convert a custom
+    // point type to CGAL point type.
+    Point convert(const Vertex *v) const
+    {
+        return Point(v->coords.x(), v->coords.y(), v->coords.z());
+    }
+    // on the fly conversion from the internal data to the CGAL types
+    Datum datum() const
+    {
+        return Datum(convert(m_pt->v1),
+                     convert(m_pt->v2),
+                     convert(m_pt->v3));
+    }
+    // returns a reference point which must be on the primitive
+    Point reference_point() const
+    {
+        return convert(m_pt->v1);
+    }
+};
+
+typedef CGAL::AABB_traits<K, Face_primitive> My_AABB_traits;
+typedef CGAL::AABB_tree<My_AABB_traits> Tree;
 
 using namespace std;
 
@@ -36,7 +90,7 @@ int main(int argc, char *argv[])
     double totalTime = 0, totalTimeEdge = 0, totalTimeReorder = 0, totalTimeCalculation = 0;
     t = clock();
     Model m = Model(argv[1]);
-    //m.unitize();
+    m.unitize();
     t = clock() - t;
     double time_taken = ((double)t) / CLOCKS_PER_SEC;
 
@@ -44,20 +98,25 @@ int main(int argc, char *argv[])
     QVector<Vertex *> vertexes = m.getVertices();
     QMap<double, Vertex *> vertex_heap;
     QVector<Face *> faces = m.getFaces();
-    QMap<QPair<Vertex *, Vertex*>, HalfEdge *> edges = m.getEdges();
+    vector<Face> cgalfaces;
+    for (Face *f : faces) {
+        cgalfaces.push_back(*f);
+    }
     cout << "Finished creating Vertexes and Faces." << endl; 
 
     cout << "Starting the vertex cost calculation..." << endl;
     int k = 0;
     int count = 0;
     t = clock();
-    vector<Vertex *> heap;
+
+    multimap<double, Vertex *> map;
     for (Vertex *v : vertexes) {
         count = v->calculateCost(count);
-        heap.push_back(v);
+        map.insert(pair<double, Vertex*>(v->cost, v));
         k++;
     }
-    make_heap(heap.begin(), heap.end(), vertex_greater_than());
+
+    Tree tree(cgalfaces.begin(), cgalfaces.end());
 
     cout << "Calculation finished in " << time_taken << " seconds." << endl;
     t = clock() - t;
@@ -65,21 +124,27 @@ int main(int argc, char *argv[])
 
     cout << "N of Vertexes: " << k << ", and of those, " << count << " have no pairs" << endl;
     cout << "N of Faces: " << m.getNumTriangles() << ", and we want " << nfaces.toInt() << endl;
+    bool refined = false;
+    unsigned iterations = 0;
 
-    while (faces.size() > numfaces) {
-        cout << "The lowest cost is " << heap.front()->cost << endl;
-        cout << "The highest cost is " << heap.back()->cost << endl;
+    while (faces.size() > numfaces) { //&& !refined) {
+        iterations++;
+        cout << "The lowest cost is " << (*map.begin()).first << endl;
+        cout << "The highest cost is " << (*map.rbegin()).first << endl;
 
         cout << "Starting the edge cost calculation..." << endl;
+
         t = clock();
-        Vertex *optimalVertex = heap.front();
+
+        Vertex *optimalVertex = (*map.begin()).second;
+        map.erase(map.begin());
         cout << "Cost of this vertex: " << optimalVertex->cost << endl;
-        pop_heap(heap.begin(), heap.end(), vertex_greater_than());
-        heap.pop_back();
         Vertex *vi = optimalVertex->getOptimalEdge();
+
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeCalculation += time_taken;
+
         cout << "Calculation Finished in " << time_taken << " seconds." << endl;
 
         cout << "The optimal Vertex is p("
@@ -131,6 +196,10 @@ int main(int argc, char *argv[])
         QVector<Vertex *> changed;
         changed = optimalVertex->getChanged();
 
+        // TODO: fix this to not delete vertices for evaluation with same cost 
+        for (Vertex *v : changed) {
+            map.erase(v->cost);
+        }
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
@@ -170,7 +239,9 @@ int main(int argc, char *argv[])
 
         t = clock();
         // This is what takes long
-        make_heap(heap.begin(), heap.end(), vertex_greater_than());
+        for (Vertex *v : changed) {
+            map.insert(pair<double, Vertex *>(v->cost, v));
+        }
 
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
@@ -178,7 +249,15 @@ int main(int argc, char *argv[])
         cout << "Finished the  reorder in " << time_taken << " seconds." << endl;
         cout << "Current number of Faces: " << faces.size() << endl;
         cout << "Current number of Vertices: " << vertexes.size() << endl;
-        cout << "Current number of Vertices in the heap: " << heap.size() << endl;
+        cout << "Current number of Vertices in the heap: " << map.size() << endl;
+
+        // if (iterations >= 100) {
+        //     iterations = 0;
+        //     for (Vertex *v : vertexes) {
+        //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 180);
+        //             refined = true;
+        //     }
+        // }
     }
 
     QString filename = QString(argv[1]);
@@ -192,4 +271,12 @@ int main(int argc, char *argv[])
     cout << "Vertex cost calculation took " << totalTimeEdge << " seconds." << endl;
     cout << "Edge cost calculation took " << totalTimeCalculation << " seconds." << endl;
     cout << "Collapse and reorder took " << totalTimeReorder << " seconds." << endl;
+    // double max = - std::numeric_limits<double>::max();
+    // for (Vertex *v : vertexes) {
+    //     double cal = tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z()));
+    //     cout << tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) << endl;
+    //     if (cal > max)
+    //         max = cal;
+    // }
+    // cout << "Max distance: " << max << endl;
 }
