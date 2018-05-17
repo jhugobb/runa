@@ -28,6 +28,7 @@ class Vertex {
         QVector<Vertex *> getChanged();
         void calculateNormal();
         HalfEdge* getEdge(Vertex *v);
+        QVector<Vertex *> getNeighborhood();
 };
 
 #endif

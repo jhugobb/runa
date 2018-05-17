@@ -212,8 +212,8 @@ void Model::parseFace(QStringList tokens)
         HalfEdge* he = halfedges.value(edge3twin);
         he->twin = halfedges.value(edge3);
         he->twin->twin = he;
+        if (false);
     }
-
     faces.append(f);
 }
 

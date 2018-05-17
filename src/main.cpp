@@ -102,9 +102,7 @@ int main(int argc, char *argv[])
     for (Face *f : faces) {
         cgalfaces.push_back(*f);
     }
-    cout << "Finished creating Vertexes and Faces." << endl; 
 
-    cout << "Starting the vertex cost calculation..." << endl;
     int k = 0;
     int count = 0;
     t = clock();
@@ -118,48 +116,26 @@ int main(int argc, char *argv[])
 
     Tree tree(cgalfaces.begin(), cgalfaces.end());
 
-    cout << "Calculation finished in " << time_taken << " seconds." << endl;
     t = clock() - t;
     time_taken = ((double)t) / CLOCKS_PER_SEC;
 
-    cout << "N of Vertexes: " << k << ", and of those, " << count << " have no pairs" << endl;
-    cout << "N of Faces: " << m.getNumTriangles() << ", and we want " << nfaces.toInt() << endl;
     bool refined = false;
     unsigned iterations = 0;
 
     while (faces.size() > numfaces) { //&& !refined) {
         iterations++;
-        cout << "The lowest cost is " << (*map.begin()).first << endl;
-        cout << "The highest cost is " << (*map.rbegin()).first << endl;
-
-        cout << "Starting the edge cost calculation..." << endl;
 
         t = clock();
 
         Vertex *optimalVertex = (*map.begin()).second;
         map.erase(map.begin());
-        cout << "Cost of this vertex: " << optimalVertex->cost << endl;
         Vertex *vi = optimalVertex->getOptimalEdge();
 
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeCalculation += time_taken;
 
-        cout << "Calculation Finished in " << time_taken << " seconds." << endl;
-
-        cout << "The optimal Vertex is p("
-             << optimalVertex->coords.x()
-             << ", " << optimalVertex->coords.y()
-             << ", " << optimalVertex->coords.z()
-             << ")." << endl;
-
-        cout << "The optimal edge is from p to e("
-             << vi->coords.x()
-             << ", " << vi->coords.y()
-             << ", " << vi->coords.z()
-             << ")." << endl;
-
-        cout << "Starting optimal point calculation..." << endl;
+        if (vi == NULL) continue;
         // Calculation of Optimal Point 
         t = clock();        
         QPair<Eigen::Matrix3d, Eigen::Vector3d> linear;
@@ -182,12 +158,6 @@ int main(int argc, char *argv[])
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeEdge += time_taken;
 
-        cout << "Optimal point calculated in " << time_taken << " seconds." << endl;
-
-        cout << "The new point is np("
-             << optimalPoint
-             << ")." << endl;
-
         QVector<Face *> facesToBeRemoved;
         QVector3D optimalCoords = QVector3D(optimalPoint[0], optimalPoint[1], optimalPoint[2]);
         // Edge collapse 
@@ -203,7 +173,6 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Got all affected vertices in " << time_taken << " seconds." << endl;
 
         t = clock();
 
@@ -213,7 +182,6 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Collapsed the edge in " << time_taken << " seconds." << endl;
 
         t = clock();
 
@@ -226,7 +194,6 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Removed degenerate Faces and vertex in " << time_taken << " seconds." << endl;
 
         t = clock();
 
@@ -235,7 +202,6 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Recalculated in " << time_taken << " seconds." << endl;
 
         t = clock();
         // This is what takes long
@@ -246,15 +212,11 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-        cout << "Finished the  reorder in " << time_taken << " seconds." << endl;
-        cout << "Current number of Faces: " << faces.size() << endl;
-        cout << "Current number of Vertices: " << vertexes.size() << endl;
-        cout << "Current number of Vertices in the heap: " << map.size() << endl;
 
         // if (iterations >= 100) {
         //     iterations = 0;
         //     for (Vertex *v : vertexes) {
-        //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 180);
+        //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 180)
         //             refined = true;
         //     }
         // }
@@ -267,6 +229,9 @@ int main(int argc, char *argv[])
 
     totalTime+=totalTimeCalculation + totalTimeReorder + totalTimeEdge;
 
+    cout << "Current number of Faces: " << faces.size() << endl;
+    cout << "Current number of Vertices: " << vertexes.size() << endl;
+    cout << "Current number of Vertices in the heap: " << map.size() << endl;
     cout << "The algorithm's total time is: " << totalTime << " seconds." << endl;
     cout << "Vertex cost calculation took " << totalTimeEdge << " seconds." << endl;
     cout << "Edge cost calculation took " << totalTimeCalculation << " seconds." << endl;

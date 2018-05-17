@@ -18,6 +18,7 @@ class HalfEdge {
         double calculateCost();
         double getArea();
         QVector3D getNormalField();
+        bool isElegible();
 };
 
 #endif // HALFEDGE_H

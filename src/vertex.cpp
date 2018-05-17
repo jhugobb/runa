@@ -32,7 +32,7 @@ int Vertex::calculateCost(int count) {
     do {
         areaSum += curr->getArea();
         normalField = normalField + curr->getNormalField();
-        if (!curr->calculated) {
+        if (!false) {
             costSum += curr->calculateCost();
             curr->calculated = true;
             curr->twin->calculated = true;
@@ -53,7 +53,7 @@ Vertex *Vertex::getOptimalEdge() {
     double maxCost = std::numeric_limits<double>::max();
     HalfEdge *best = edge;
     do {
-        if (best->cost < maxCost) {
+        if (best->cost < maxCost && best->isElegible()) {
             result = best->next;
             maxCost = best->cost;
         }
@@ -151,4 +151,14 @@ HalfEdge *Vertex::getEdge(Vertex *v) {
     } while (curr != edge);
     assert(false);
     return NULL;
+}
+
+QVector<Vertex *> Vertex::getNeighborhood() {
+    QVector<Vertex *> result;
+    HalfEdge *curr = edge;
+    do {
+        result.append(curr->next); 
+        curr = curr->twin->nextEdge;
+    } while (curr != edge);
+    return result;
 }
