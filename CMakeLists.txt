@@ -20,7 +20,7 @@ set(CMAKE_CXX_FLAGS "${Qt5Widgets_EXECUTABLE_COMPILE_FLAGS}")
 get_target_property(QtCore_location Qt5::Core LOCATION)
 
 # Create a debug build
-set(CMAKE_CXX_FLAGS "-Wall --std=c++14 -g -Ofast")
+set(CMAKE_CXX_FLAGS "-Wall --std=c++14 -Ofast")
 
 # Set all CPP files to be source files
 file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CURRENT_SOURCE_DIR}/src/*.h)

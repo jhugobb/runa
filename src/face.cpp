@@ -39,11 +39,6 @@ bool Face::areTwins(Face *f, Vertex *v) {
     return vt && (ver1 || ver2 || ver3);
 }
 
-double Face::normalFieldDeviation() {
-    // TODO: CHANGE GIVEN THE ALGORITM-> PAPER IS CONFUSING
-    return area;
-}
-
 Vertex* Face::vertexOf(Face *f, Vertex *v) {
     if ((v1 == (f->v1) || v1 == (f->v2) || v1 == (f->v3)) && (v1 != (v)))
         return v1;

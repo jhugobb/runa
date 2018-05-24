@@ -7,7 +7,6 @@
 *.core
 *.moc
 *.o
-*.obj
 *.orig
 *.rej
 *.so
@@ -73,3 +72,6 @@ Thumbs.db
 
 #build folder
 build/*
+
+#compressed files
+*.zip

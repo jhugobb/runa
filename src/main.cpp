@@ -26,7 +26,7 @@ struct vertex_greater_than
 
 typedef CGAL::Simple_cartesian<double> K;
 // the custom triangles are stored into a vector
-typedef std::vector<Face>::const_iterator Iterator;
+typedef std::vector<Face*>::const_iterator Iterator;
 
 // The following primitive provides the conversion facilities between
 // the custom triangle and point types and the CGAL ones
@@ -49,7 +49,7 @@ struct Face_primitive
     // the following constructor is the one that receives the iterators from the
     // iterator range given as input to the AABB_tree
     Face_primitive(Iterator it)
-        : m_pt(&(*it)) {}
+        : m_pt((*it)) {}
     const Id &id() const { return m_pt; }
     // utility function to convert a custom
     // point type to CGAL point type.
@@ -90,7 +90,7 @@ int main(int argc, char *argv[])
     double totalTime = 0, totalTimeEdge = 0, totalTimeReorder = 0, totalTimeCalculation = 0;
     t = clock();
     Model m = Model(argv[1]);
-    m.unitize();
+    //m.unitize();
     t = clock() - t;
     double time_taken = ((double)t) / CLOCKS_PER_SEC;
 
@@ -98,9 +98,9 @@ int main(int argc, char *argv[])
     QVector<Vertex *> vertexes = m.getVertices();
     QMap<double, Vertex *> vertex_heap;
     QVector<Face *> faces = m.getFaces();
-    vector<Face> cgalfaces;
+    vector<Face *> cgalfaces;
     for (Face *f : faces) {
-        cgalfaces.push_back(*f);
+        cgalfaces.push_back(f);
     }
 
     int k = 0;
@@ -212,11 +212,11 @@ int main(int argc, char *argv[])
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
-
+        
         // if (iterations >= 100) {
         //     iterations = 0;
         //     for (Vertex *v : vertexes) {
-        //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 180)
+        //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 1)
         //             refined = true;
         //     }
         // }
@@ -236,12 +236,14 @@ int main(int argc, char *argv[])
     cout << "Vertex cost calculation took " << totalTimeEdge << " seconds." << endl;
     cout << "Edge cost calculation took " << totalTimeCalculation << " seconds." << endl;
     cout << "Collapse and reorder took " << totalTimeReorder << " seconds." << endl;
-    // double max = - std::numeric_limits<double>::max();
-    // for (Vertex *v : vertexes) {
-    //     double cal = tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z()));
-    //     cout << tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) << endl;
-    //     if (cal > max)
-    //         max = cal;
-    // }
-    // cout << "Max distance: " << max << endl;
+    double max = - std::numeric_limits<double>::max();
+    for (Vertex *v : vertexes) {
+        double cal = tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z()));
+        if (cal != 0) {
+            cout << cal << endl;
+        }
+        if (cal > max)
+            max = cal;
+    }
+    cout << "Max distance: " << max << endl;
 }

@@ -12,7 +12,10 @@ double HalfEdge::calculateCost() {
 
     QVector3D n1 = face->n;
     QVector3D n2 = twin->face->n;
-    cost = (area1 + area2) * (1.0 - 0.91 * QVector3D::dotProduct(n1, n2));
+    Vertex *v1 = next, *v2 = twin->next;
+    double sqdist = pow((v2->coords.x() - v1->coords.x()), 2) + pow((v2->coords.y() - v1->coords.y()), 2) + pow((v2->coords.z() - v1->coords.z()), 2);
+
+    cost = (area1 + area2) * (1.0 - QVector3D::dotProduct(n1, n2)) + sqdist;
     twin->cost = cost;
     return cost;
 }
@@ -31,8 +34,6 @@ bool HalfEdge::isElegible() {
     QVector<Vertex *> neighbors1, neighbors2;
     neighbors1 = origin->getNeighborhood();
     neighbors2 = dest->getNeighborhood();
-    assert(neighbors1.size() != 0);
-    assert(neighbors2.size() != 0);
     int count = 0;
     for (Vertex *v : neighbors1) {
         if (neighbors2.contains(v)) {

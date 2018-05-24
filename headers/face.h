@@ -20,7 +20,6 @@ class Face {
         HalfEdge *edge;
         bool operator==(const Face &f2) const;
         bool areTwins(Face *f, Vertex *v);
-        double normalFieldDeviation();
         Vertex* vertexOf(Face *f, Vertex *v);
         void replace(Vertex *old, Vertex *actual);
         void recalculate();
