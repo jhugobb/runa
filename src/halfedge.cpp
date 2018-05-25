@@ -6,7 +6,7 @@ HalfEdge::HalfEdge() {
     calculated = false;
 }
 
-double HalfEdge::calculateCost() {
+double HalfEdge::calculateCost(double tolerance) {
     double area1 = face->area;
     double area2 = twin->face->area;
 
@@ -14,8 +14,7 @@ double HalfEdge::calculateCost() {
     QVector3D n2 = twin->face->n;
     Vertex *v1 = next, *v2 = twin->next;
     double sqdist = pow((v2->coords.x() - v1->coords.x()), 2) + pow((v2->coords.y() - v1->coords.y()), 2) + pow((v2->coords.z() - v1->coords.z()), 2);
-
-    cost = (area1 + area2) * (1.0 - QVector3D::dotProduct(n1, n2)) + sqdist;
+    cost = (area1 + area2) * (1.0 - tolerance * QVector3D::dotProduct(n1, n2)) * sqrt(sqdist);
     twin->cost = cost;
     return cost;
 }

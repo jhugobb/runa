@@ -15,6 +15,7 @@
 *_resource.rc
 *.qm
 .#*
+*-opt.obj
 *.*#
 core
 !core/

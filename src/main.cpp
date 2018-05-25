@@ -79,13 +79,15 @@ using namespace std;
 int main(int argc, char *argv[])
 {
 
-    if (argc < 3 || argc > 4)
+    if (argc < 4 || argc > 5)
     {
-        cerr << "Usage: " << argv[0] << " in-file numFaces \n";
+        cerr << "Usage: " << argv[0] << " in-file numFaces tolerance\n";
         return 1;
     }
     QString nfaces = QString(argv[2]);
     int numfaces = nfaces.toInt();
+    QString tol = QString(argv[3]);
+    double tolerance = tol.toDouble();
     clock_t t;
     double totalTime = 0, totalTimeEdge = 0, totalTimeReorder = 0, totalTimeCalculation = 0;
     t = clock();
@@ -99,19 +101,17 @@ int main(int argc, char *argv[])
     QMap<double, Vertex *> vertex_heap;
     QVector<Face *> faces = m.getFaces();
     vector<Face *> cgalfaces;
+    vector<Vertex *> queue;
     for (Face *f : faces) {
         cgalfaces.push_back(f);
     }
 
-    int k = 0;
-    int count = 0;
     t = clock();
 
     multimap<double, Vertex *> map;
     for (Vertex *v : vertexes) {
-        count = v->calculateCost(count);
-        map.insert(pair<double, Vertex*>(v->cost, v));
-        k++;
+        v->calculateCost(tolerance);
+        map.insert(pair<double, Vertex *>(v->cost, v));
     }
 
     Tree tree(cgalfaces.begin(), cgalfaces.end());
@@ -120,9 +120,9 @@ int main(int argc, char *argv[])
     time_taken = ((double)t) / CLOCKS_PER_SEC;
 
     bool refined = false;
-    unsigned iterations = 0;
+    unsigned iterations = 1;
 
-    while (faces.size() > numfaces) { //&& !refined) {
+    while (faces.size() > numfaces && !refined) {
         iterations++;
 
         t = clock();
@@ -139,13 +139,13 @@ int main(int argc, char *argv[])
         // Calculation of Optimal Point 
         t = clock();        
         QPair<Eigen::Matrix3d, Eigen::Vector3d> linear;
-        optimalVertex->getLinearPair(linear);
+        linear = optimalVertex->getLinearPair(linear);
         QPair<Eigen::Matrix3d, Eigen::Vector3d> linearI;
-        vi->getLinearPair(linearI);
+        linearI = vi->getLinearPair(linearI);
 
         Eigen::Vector3d optimalPoint;
         Eigen::Matrix3d A = linear.first + linearI.first;
-        if (abs(A.determinant()) < 0.001)
+        if (abs(A.determinant()) < 0.01)
         {
             optimalPoint = Eigen::Vector3d(vi->coords.x(), vi->coords.y(), vi->coords.z());
         }
@@ -197,14 +197,19 @@ int main(int argc, char *argv[])
 
         t = clock();
 
-        changed = vi->recalculateCost(count, changed);
+        changed = vi->recalculateCost(tolerance, changed);
 
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
 
         t = clock();
-        // This is what takes long
+        for (unsigned i = 0; i < queue.size(); ++i){
+            if (map.find(queue[i]->cost) == map.end()) {
+                map.insert(pair<double, Vertex *>(queue[i]->cost, queue[i]));
+                queue.erase(queue.begin()+i-1);
+            }
+        }
         for (Vertex *v : changed) {
             map.insert(pair<double, Vertex *>(v->cost, v));
         }
@@ -213,7 +218,7 @@ int main(int argc, char *argv[])
         time_taken = ((double)t) / CLOCKS_PER_SEC;
         totalTimeReorder += time_taken;
         
-        // if (iterations >= 100) {
+        // if (iterations >= 1000) {
         //     iterations = 0;
         //     for (Vertex *v : vertexes) {
         //         if (tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())) > 1)
@@ -236,14 +241,14 @@ int main(int argc, char *argv[])
     cout << "Vertex cost calculation took " << totalTimeEdge << " seconds." << endl;
     cout << "Edge cost calculation took " << totalTimeCalculation << " seconds." << endl;
     cout << "Collapse and reorder took " << totalTimeReorder << " seconds." << endl;
-    double max = - std::numeric_limits<double>::max();
+    double min = std::numeric_limits<double>::max();
     for (Vertex *v : vertexes) {
         double cal = tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z()));
         if (cal != 0) {
             cout << cal << endl;
         }
-        if (cal > max)
-            max = cal;
+        if (cal < min)
+            min = cal;
     }
-    cout << "Max distance: " << max << endl;
+    cout << "Min distance: " << min << endl;
 }

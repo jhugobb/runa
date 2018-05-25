@@ -19,12 +19,12 @@ class Vertex {
         double cost;
         HalfEdge *edge;
         void addNormal(QVector3D n);
-        int calculateCost(int count);
+        void calculateCost(double tolerance);
         bool operator==(const Vertex &v2) const;
         Vertex *getOptimalEdge();
-        void getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
+        QPair<Eigen::Matrix3d, Eigen::Vector3d> getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
         QVector<Face *> replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *old, HalfEdge *he);
-        QVector<Vertex *> recalculateCost(int count, QVector<Vertex *> result);
+        QVector<Vertex *> recalculateCost(double tolerance, QVector<Vertex *> result);
         QVector<Vertex *> getChanged();
         void calculateNormal();
         HalfEdge* getEdge(Vertex *v);

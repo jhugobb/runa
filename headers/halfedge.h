@@ -15,7 +15,7 @@ class HalfEdge {
         Face *face;
         bool calculated;
         double cost;
-        double calculateCost();
+        double calculateCost(double tolerance);
         double getArea();
         QVector3D getNormalField();
         bool isElegible();

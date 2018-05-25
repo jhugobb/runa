@@ -25,7 +25,7 @@ void Vertex::addNormal(QVector3D n) {
     normal = QVector3D(n);
 } 
 
-int Vertex::calculateCost(int count) {
+void Vertex::calculateCost(double tolerance) {
     double costSum = 0, areaSum = 0;
     QVector3D normalField = QVector3D(0,0,0);
     HalfEdge *curr = edge;
@@ -33,7 +33,7 @@ int Vertex::calculateCost(int count) {
         areaSum += curr->getArea();
         normalField = normalField + curr->getNormalField();
         if (!false) {
-            costSum += curr->calculateCost();
+            costSum += curr->calculateCost(tolerance);
             curr->calculated = true;
             curr->twin->calculated = true;
         } else costSum += curr->cost;
@@ -41,7 +41,6 @@ int Vertex::calculateCost(int count) {
         curr = curr->twin->nextEdge;
     } while (curr != edge);
     cost = costSum + ((areaSum) - normalField.length());
-    return count;
 }
 
 bool Vertex::operator==(const Vertex &v2) const {
@@ -62,7 +61,7 @@ Vertex *Vertex::getOptimalEdge() {
     return result;
 }
 
-void Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
+QPair<Eigen::Matrix3d, Eigen::Vector3d> Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
     Eigen::Matrix3d resMatrix; //A
     resMatrix << 0, 0, 0, 0, 0, 0, 0, 0, 0;
     Eigen::Vector3d resVector(0,0,0); //b
@@ -81,6 +80,7 @@ void Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
 
     result.first = resMatrix;
     result.second = resVector;
+    return result;
 }
 
 QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, Vertex *actual, HalfEdge *he) {
@@ -108,9 +108,9 @@ QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, V
     return result;
 }
 
-QVector<Vertex *> Vertex::recalculateCost(int count, QVector<Vertex *> result) {
+QVector<Vertex *> Vertex::recalculateCost(double tolerance, QVector<Vertex *> result) {
     for (Vertex *v : result) {
-        v->calculateCost(count);
+        v->calculateCost(tolerance);
     }
     return result;
 }
