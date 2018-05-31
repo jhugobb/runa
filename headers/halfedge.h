@@ -3,22 +3,22 @@
 
 #include <QVector>
 
-#include "vertex.h"
 #include "face.h"
+#include "vertex.h"
 
 class HalfEdge {
-    public: 
-        HalfEdge();
-        Vertex *next;
-        HalfEdge *twin;
-        HalfEdge *nextEdge;
-        Face *face;
-        bool calculated;
-        double cost;
-        double calculateCost(double tolerance);
-        double getArea();
-        QVector3D getNormalField();
-        bool isElegible();
+   public:
+    HalfEdge();
+    Vertex *next;
+    HalfEdge *twin;
+    HalfEdge *nextEdge;
+    Face *face;
+    bool calculated;
+    double cost;
+    double calculateCost(double tolerance);
+    double getArea();
+    QVector3D getNormalField();
+    bool isElegible();
 };
 
-#endif // HALFEDGE_H
+#endif  // HALFEDGE_H

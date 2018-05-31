@@ -7,7 +7,7 @@ using namespace std;
 
 Face::Face() {}
 
-Face::Face(Vertex* pos1, Vertex* pos2, Vertex* pos3) {
+Face::Face(Vertex *pos1, Vertex *pos2, Vertex *pos3) {
     v1 = pos1;
     v2 = pos2;
     v3 = pos3;
@@ -15,8 +15,8 @@ Face::Face(Vertex* pos1, Vertex* pos2, Vertex* pos3) {
     double edge1 = sqrt(pow((v2->coords.x() - v1->coords.x()), 2) + pow((v2->coords.y() - v1->coords.y()), 2) + pow((v2->coords.z() - v1->coords.z()), 2));
     double edge2 = sqrt(pow((v2->coords.x() - v3->coords.x()), 2) + pow((v2->coords.y() - v3->coords.y()), 2) + pow((v2->coords.z() - v3->coords.z()), 2));
     double edge3 = sqrt(pow((v3->coords.x() - v1->coords.x()), 2) + pow((v3->coords.y() - v1->coords.y()), 2) + pow((v3->coords.z() - v1->coords.z()), 2));
-    double p = (edge1 + edge2 + edge3)/2.0;
-    area = sqrt(p*(p-edge1)*(p-edge2)*(p-edge3));
+    double p = (edge1 + edge2 + edge3) / 2.0;
+    area = sqrt(p * (p - edge1) * (p - edge2) * (p - edge3));
 }
 
 bool Face::operator==(const Face &f2) const {
@@ -39,7 +39,7 @@ bool Face::areTwins(Face *f, Vertex *v) {
     return vt && (ver1 || ver2 || ver3);
 }
 
-Vertex* Face::vertexOf(Face *f, Vertex *v) {
+Vertex *Face::vertexOf(Face *f, Vertex *v) {
     if ((v1 == (f->v1) || v1 == (f->v2) || v1 == (f->v3)) && (v1 != (v)))
         return v1;
     if ((v2 == (f->v1) || v2 == (f->v2) || v2 == (f->v3)) && (v2 != (v)))
@@ -57,6 +57,7 @@ void Face::replace(Vertex *old, Vertex *actual) {
     } else if (v3 == (old)) {
         v3 = actual;
     }
+    //recalculate();
 }
 
 void Face::recalculate() {
@@ -65,9 +66,9 @@ void Face::recalculate() {
 }
 
 bool Face::isDegenerate() {
-    double edge1 = sqrt( pow((v2->coords.x() - v1->coords.x()), 2) + pow((v2->coords.y() - v1->coords.y()), 2) + pow((v2->coords.z() - v1->coords.z()), 2) );
-    double edge2 = sqrt( pow((v2->coords.x() - v3->coords.x()), 2) + pow((v2->coords.y() - v3->coords.y()), 2) + pow((v2->coords.z() - v3->coords.z()), 2) );
-    double edge3 = sqrt( pow((v3->coords.x() - v1->coords.x()), 2) + pow((v3->coords.y() - v1->coords.y()), 2) + pow((v3->coords.z() - v1->coords.z()), 2) );
+    double edge1 = sqrt(pow((v2->coords.x() - v1->coords.x()), 2) + pow((v2->coords.y() - v1->coords.y()), 2) + pow((v2->coords.z() - v1->coords.z()), 2));
+    double edge2 = sqrt(pow((v2->coords.x() - v3->coords.x()), 2) + pow((v2->coords.y() - v3->coords.y()), 2) + pow((v2->coords.z() - v3->coords.z()), 2));
+    double edge3 = sqrt(pow((v3->coords.x() - v1->coords.x()), 2) + pow((v3->coords.y() - v1->coords.y()), 2) + pow((v3->coords.z() - v1->coords.z()), 2));
 
     bool cond1 = !(edge1 + edge2 > edge3 && edge1 + edge2 > edge2 && edge3 + edge2 > edge1);
     bool cond2 = !((v1 != v2) && (v2 != v3) && (v1 != v3));

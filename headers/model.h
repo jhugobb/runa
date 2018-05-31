@@ -28,6 +28,7 @@ public:
     QVector<Vertex *> getVertices();
     QVector<Face *> getFaces();
     QMap<QPair<Vertex *, Vertex *>, HalfEdge *> getEdges();
+    QVector<Face *> getCopy(QVector<Face *> result);
 
     bool hasNormals();
     bool hasTextureCoords();

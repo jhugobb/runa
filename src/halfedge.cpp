@@ -19,11 +19,11 @@ double HalfEdge::calculateCost(double tolerance) {
     return cost;
 }
 
-double HalfEdge::getArea(){
+double HalfEdge::getArea() {
     return face->area;
 }
 
-QVector3D HalfEdge::getNormalField(){
+QVector3D HalfEdge::getNormalField() {
     return face->area * face->n;
 }
 

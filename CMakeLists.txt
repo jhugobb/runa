@@ -12,6 +12,8 @@ find_package(Qt5Widgets REQUIRED)
 include_directories(${Qt5Widgets_INCLUDES})
 add_definitions(${Qt5Widgets_DEFINITIONS})
 
+find_package (Eigen3 3.3 REQUIRED NO_MODULE)
+
 find_package(CGAL REQUIRED COMPONENTS Core) # If the dependency is required, use REQUIRED option - if it's not found CMake will issue an error
 include( ${CGAL_USE_FILE} )
 
@@ -28,3 +30,5 @@ file(GLOB_RECURSE SOURCE_FILES ${CMAKE_CURRENT_SOURCE_DIR}/src/*.cpp ${CMAKE_CUR
 add_executable(${PROJECT_NAME} ${SOURCE_FILES})
 
 target_link_libraries(${PROJECT_NAME} ${Qt5Widgets_LIBRARIES})
+
+target_link_libraries (${PROJECT_NAME} Eigen3::Eigen)

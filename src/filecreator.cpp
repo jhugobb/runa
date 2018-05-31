@@ -12,8 +12,7 @@ FileCreator::FileCreator(QVector<Vertex *> v, QVector<Face *> f, QString file) {
 void FileCreator::createFile() {
     QFile file(filename);
     file.remove();
-    if (file.open(QIODevice::ReadWrite))
-    {
+    if (file.open(QIODevice::ReadWrite)) {
         QTextStream stream(&file);
         for (Vertex *v : vertices) {
             v->calculateNormal();
@@ -24,9 +23,9 @@ void FileCreator::createFile() {
         }
 
         for (Face *f : faces) {
-            stream << "f " << vertices.indexOf(f->v1)+1 << "//" << vertices.indexOf(f->v1)+1 << " ";
-            stream << vertices.indexOf(f->v2)+1 << "//" << vertices.indexOf(f->v2)+1 << " ";
-            stream << vertices.indexOf(f->v3)+1 << "//" << vertices.indexOf(f->v3)+1 << endl;
+            stream << "f " << vertices.indexOf(f->v1) + 1 << "//" << vertices.indexOf(f->v1) + 1 << " ";
+            stream << vertices.indexOf(f->v2) + 1 << "//" << vertices.indexOf(f->v2) + 1 << " ";
+            stream << vertices.indexOf(f->v3) + 1 << "//" << vertices.indexOf(f->v3) + 1 << endl;
         }
     }
 }

@@ -1,11 +1,11 @@
-#include <QVector>
 #include <QVector2D>
 #include <QVector3D>
+#include <QVector>
 #include <iostream>
 #include <limits>
 
-#include "headers/vertex.h"
 #include "headers/face.h"
+#include "headers/vertex.h"
 
 using namespace std;
 
@@ -23,11 +23,11 @@ Vertex::Vertex(QVector3D coordinates) {
 
 void Vertex::addNormal(QVector3D n) {
     normal = QVector3D(n);
-} 
+}
 
 void Vertex::calculateCost(double tolerance) {
     double costSum = 0, areaSum = 0;
-    QVector3D normalField = QVector3D(0,0,0);
+    QVector3D normalField = QVector3D(0, 0, 0);
     HalfEdge *curr = edge;
     do {
         areaSum += curr->getArea();
@@ -36,11 +36,12 @@ void Vertex::calculateCost(double tolerance) {
             costSum += curr->calculateCost(tolerance);
             curr->calculated = true;
             curr->twin->calculated = true;
-        } else costSum += curr->cost;
+        } else
+            costSum += curr->cost;
 
         curr = curr->twin->nextEdge;
     } while (curr != edge);
-    cost = costSum + ((areaSum) - normalField.length());
+    cost = costSum + ((areaSum)-normalField.length());
 }
 
 bool Vertex::operator==(const Vertex &v2) const {
@@ -48,7 +49,7 @@ bool Vertex::operator==(const Vertex &v2) const {
 }
 
 Vertex *Vertex::getOptimalEdge() {
-    Vertex* result = (Vertex *) NULL;
+    Vertex *result = (Vertex *)NULL;
     double maxCost = std::numeric_limits<double>::max();
     HalfEdge *best = edge;
     do {
@@ -62,9 +63,9 @@ Vertex *Vertex::getOptimalEdge() {
 }
 
 QPair<Eigen::Matrix3d, Eigen::Vector3d> Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
-    Eigen::Matrix3d resMatrix; //A
+    Eigen::Matrix3d resMatrix;  //A
     resMatrix << 0, 0, 0, 0, 0, 0, 0, 0, 0;
-    Eigen::Vector3d resVector(0,0,0); //b
+    Eigen::Vector3d resVector(0, 0, 0);  //b
 
     Eigen::Vector3d point(coords.x(), coords.y(), coords.z());
     HalfEdge *curr = edge;
@@ -76,14 +77,14 @@ QPair<Eigen::Matrix3d, Eigen::Vector3d> Vertex::getLinearPair(QPair<Eigen::Matri
         resMatrix = resMatrix + aj;
         resVector = resVector + (aj * point);
         curr = curr->twin->nextEdge;
-    } while (curr != edge) ;
+    } while (curr != edge);
 
     result.first = resMatrix;
     result.second = resVector;
     return result;
 }
 
-QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, Vertex *actual, HalfEdge *he) {
+QVector<Face *> Vertex::replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *actual, HalfEdge *he) {
     actual->coords = newCoords;
     if ((actual->edge->face == he->twin->face) || (actual->edge->face == he->face))
         actual->edge = he->twin->nextEdge->nextEdge->twin->nextEdge->nextEdge->twin;
@@ -91,7 +92,7 @@ QVector<Face*> Vertex::replaceWith(QVector3D newCoords, QVector<Face*> result, V
     do {
         if (curr->twin->next != actual) curr->next = actual;
         curr->face->replace(this, actual);
-        if (curr->face->isDegenerate()){
+        if (curr->face->isDegenerate()) {
             curr->face->changeEdges();
             result.append(curr->face);
         }
@@ -138,7 +139,7 @@ void Vertex::calculateNormal() {
         normal = normal + f->area * (f->n);
         curr = curr->twin->nextEdge;
     } while (curr != edge);
-    normal = normal/count;
+    normal = normal / count;
     normal = n;
     normal.normalize();
 }
@@ -157,7 +158,7 @@ QVector<Vertex *> Vertex::getNeighborhood() {
     QVector<Vertex *> result;
     HalfEdge *curr = edge;
     do {
-        result.append(curr->next); 
+        result.append(curr->next);
         curr = curr->twin->nextEdge;
     } while (curr != edge);
     return result;

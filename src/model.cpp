@@ -2,8 +2,8 @@
 
 #include <QDebug>
 #include <QFile>
-#include <QTextStream>
 #include <QMatrix4x4>
+#include <QTextStream>
 
 #include <iostream>
 
@@ -12,17 +12,16 @@ using namespace std;
 // A Private Vertex class for vertex comparison
 // DO NOT include "vertex.h" or something similar in this file
 struct Vertice {
-
     QVector3D coord;
     QVector3D normal;
     QVector2D texCoord;
 
-    Vertice() : coord(), normal(), texCoord(){}
-    Vertice(QVector3D coords, QVector3D normal, QVector3D texc): coord(coords), normal(normal), texCoord(texc){}
+    Vertice() : coord(), normal(), texCoord() {}
+    Vertice(QVector3D coords, QVector3D normal, QVector3D texc) : coord(coords), normal(normal), texCoord(texc) {}
 
     bool operator==(const Vertice &other) const {
         if (other.coord != coord)
-                return false;
+            return false;
         if (other.normal != normal)
             return false;
         if (other.texCoord != texCoord)
@@ -38,15 +37,15 @@ Model::Model(QString filename) {
 
     qDebug() << ":: Loading model:" << filename;
     QFile file(filename);
-    if(file.open(QIODevice::ReadOnly)) {
+    if (file.open(QIODevice::ReadOnly)) {
         QTextStream in(&file);
 
         QString line;
         QStringList tokens = QStringList();
 
-        while(!in.atEnd()) {
+        while (!in.atEnd()) {
             line = in.readLine();
-            if (line.startsWith("#")) continue; // skip comments
+            if (line.startsWith("#")) continue;  // skip comments
 
             tokens = line.split(" ", QString::SkipEmptyParts);
 
@@ -57,24 +56,22 @@ Model::Model(QString filename) {
                 parseVertex(tokens);
             }
 
-            if (tokens.at(0) == "vn" ) {
+            if (tokens.at(0) == "vn") {
                 parseNormal(tokens);
             }
 
-            if (tokens.at(0) == "f" ) {
+            if (tokens.at(0) == "f") {
                 parseFace(tokens);
             }
         }
 
         file.close();
-        
     }
 
     //addNormals();
 }
 
-QVector<Vertex *> Model::getVertices()
-{
+QVector<Vertex *> Model::getVertices() {
     return vertices;
 }
 
@@ -92,23 +89,20 @@ QMap<QPair<Vertex *, Vertex *>, HalfEdge *> Model::getEdges() {
  *
  * @return number of triangles
  */
-int Model::getNumTriangles()
-{
+int Model::getNumTriangles() {
     return faces.size();
 }
 
-void Model::parseVertex(QStringList tokens)
-{
+void Model::parseVertex(QStringList tokens) {
     float x, y, z;
     x = tokens[1].toFloat();
     y = tokens[2].toFloat();
     z = tokens[3].toFloat();
-    Vertex* v = new Vertex(QVector3D(x, y, z));
+    Vertex *v = new Vertex(QVector3D(x, y, z));
     vertices.append(v);
 }
 
-void Model::parseNormal(QStringList tokens)
-{
+void Model::parseNormal(QStringList tokens) {
     hNorms = true;
     float x, y, z;
     x = tokens[1].toFloat();
@@ -118,28 +112,26 @@ void Model::parseNormal(QStringList tokens)
     numNormals++;
 }
 
-void Model::parseFace(QStringList tokens)
-{
+void Model::parseFace(QStringList tokens) {
     QStringList elements;
-    QVector<Vertex*> verts;
-    for (int i = 1; i != tokens.size(); ++i)
-    {
+    QVector<Vertex *> verts;
+    for (int i = 1; i != tokens.size(); ++i) {
         elements = tokens[i].split("/");
         // -1 since .obj count from 1
         if (elements.size() > 0 && !elements[0].isEmpty()) {
             verts.append(vertices.at(elements[0].toInt() - 1));
         }
         // TODO: Change to incorporate multiple normal vertices
-        if (elements.size() > 2 && !elements[2].isEmpty() ) {
+        if (elements.size() > 2 && !elements[2].isEmpty()) {
             vertices.at(elements[0].toInt() - 1)->addNormal(normals.at(elements[2].toInt() - 1));
         }
     }
     Face *f = new Face(verts.at(0), verts.at(1), verts.at(2));
     QPair<Vertex *, Vertex *> edge1, edge1twin, edge2, edge2twin, edge3, edge3twin;
-    
+
     edge1.first = verts.at(0);
     edge1.second = verts.at(1);
-    
+
     edge1twin.first = verts.at(1);
     edge1twin.second = verts.at(0);
 
@@ -148,16 +140,16 @@ void Model::parseFace(QStringList tokens)
 
     edge2twin.first = verts.at(2);
     edge2twin.second = verts.at(1);
-    
+
     edge3.first = verts.at(2);
     edge3.second = verts.at(0);
 
     edge3twin.first = verts.at(0);
     edge3twin.second = verts.at(2);
 
-    HalfEdge* he1 = new HalfEdge();
-    HalfEdge* he2 = new HalfEdge();
-    HalfEdge* he3 = new HalfEdge();
+    HalfEdge *he1 = new HalfEdge();
+    HalfEdge *he2 = new HalfEdge();
+    HalfEdge *he3 = new HalfEdge();
     he1->nextEdge = he2;
     he2->nextEdge = he3;
     he3->nextEdge = he1;
@@ -174,7 +166,7 @@ void Model::parseFace(QStringList tokens)
     }
 
     if (halfedges.contains(edge1twin)) {
-        HalfEdge* he = halfedges.value(edge1twin);
+        HalfEdge *he = halfedges.value(edge1twin);
         he->twin = halfedges.value(edge1);
         he->twin->twin = he;
     }
@@ -191,7 +183,7 @@ void Model::parseFace(QStringList tokens)
     }
 
     if (halfedges.contains(edge2twin)) {
-        HalfEdge* he = halfedges.value(edge2twin);
+        HalfEdge *he = halfedges.value(edge2twin);
         he->twin = halfedges.value(edge2);
         he->twin->twin = he;
     }
@@ -209,10 +201,11 @@ void Model::parseFace(QStringList tokens)
     }
 
     if (halfedges.contains(edge3twin)) {
-        HalfEdge* he = halfedges.value(edge3twin);
+        HalfEdge *he = halfedges.value(edge3twin);
         he->twin = halfedges.value(edge3);
         he->twin->twin = he;
-        if (false);
+        if (false)
+            ;
     }
     faces.append(f);
 }
@@ -224,16 +217,14 @@ void Model::parseFace(QStringList tokens)
  * @param N Number of vertexes
  * @return X Length
  */
-float Model::getXLength () {
-    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-    for(int i = 0 ; i < vertices.size() ; i++) {
+float Model::getXLength() {
+    float min = std::numeric_limits<float>::max(), max = -std::numeric_limits<float>::max();
+    for (int i = 0; i < vertices.size(); i++) {
         if (vertices.at(i)->coords.x() < min) {
             min = vertices.at(i)->coords.x();
-        }
-        else if (vertices.at(i)->coords.x() > max) {
+        } else if (vertices.at(i)->coords.x() > max) {
             max = vertices.at(i)->coords.x();
         }
-
     }
     return (max - min);
 }
@@ -244,16 +235,14 @@ float Model::getXLength () {
  * @param N Number of vertexes
  * @return Y Length
  */
-float Model::getYLength () {
-    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-    for(int i = 0 ; i < vertices.size() ; i++) {
+float Model::getYLength() {
+    float min = std::numeric_limits<float>::max(), max = -std::numeric_limits<float>::max();
+    for (int i = 0; i < vertices.size(); i++) {
         if (vertices.at(i)->coords.y() < min) {
             min = vertices.at(i)->coords.y();
-        }
-        else if (vertices.at(i)->coords.y() > max) {
+        } else if (vertices.at(i)->coords.y() > max) {
             max = vertices.at(i)->coords.y();
         }
-
     }
     return (max - min);
 }
@@ -264,16 +253,14 @@ float Model::getYLength () {
  * @param N Number of vertexes
  * @return Z Length
  */
-float Model::getZLength () {
-    float min = std::numeric_limits<float>::max(), max = - std::numeric_limits<float>::max();
-    for(int i = 0 ; i < vertices.size() ; i++) {
+float Model::getZLength() {
+    float min = std::numeric_limits<float>::max(), max = -std::numeric_limits<float>::max();
+    for (int i = 0; i < vertices.size(); i++) {
         if (vertices.at(i)->coords.z() < min) {
             min = vertices.at(i)->coords.z();
-        }
-        else if (vertices.at(i)->coords.z() > max) {
+        } else if (vertices.at(i)->coords.z() > max) {
             max = vertices.at(i)->coords.z();
         }
-
     }
     return (max - min);
 }
@@ -284,7 +271,7 @@ float Model::getZLength () {
  * @param N Number of vertexes.
  * @return Greatest length.
  */
-float Model::getMaxLength () {
+float Model::getMaxLength() {
     float max = getXLength(), tmp;
 
     if ((tmp = getYLength()) > max) {
@@ -298,7 +285,6 @@ float Model::getMaxLength () {
     return max;
 }
 
-
 /**
  * @brief Model::unitze Not Implemented yet!
  *
@@ -311,7 +297,18 @@ void Model::unitize() {
     QMatrix4x4 m = QMatrix4x4();
     m.scale(1.0 / getMaxLength());
 
-    for (int i = 0 ; i < vertices.size() ; i++) {
+    for (int i = 0; i < vertices.size(); i++) {
         vertices.at(i)->coords = m * vertices.at(i)->coords;
     }
+}
+
+QVector<Face *> Model::getCopy(QVector<Face *> result) {
+    for (Face *f : faces) {
+        Face *n = new Face(*f);
+        n->v1 = new Vertex(*n->v1);
+        n->v2 = new Vertex(*n->v2);
+        n->v3 = new Vertex(*n->v3);
+        result.append(n);
+    }
+    return result;
 }
