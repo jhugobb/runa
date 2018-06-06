@@ -293,13 +293,14 @@ float Model::getMaxLength() {
  * Usefull for models with different scales
  *
  */
-void Model::unitize() {
+double Model::unitize() {
     QMatrix4x4 m = QMatrix4x4();
     m.scale(1.0 / getMaxLength());
 
     for (int i = 0; i < vertices.size(); i++) {
         vertices.at(i)->coords = m * vertices.at(i)->coords;
     }
+    return 1.0 / getMaxLength();
 }
 
 QVector<Face *> Model::getCopy(QVector<Face *> result) {

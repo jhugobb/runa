@@ -38,7 +38,7 @@ public:
     float getYLength() ;
     float getZLength() ;
     float getMaxLength() ;
-    void unitize();
+    double unitize();
 
 private:
 

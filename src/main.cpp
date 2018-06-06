@@ -227,17 +227,22 @@ int main(int argc, char *argv[]) {
         totalTimeError += time_taken;
     }
 
+    double sqSum = 0;
     double max = -std::numeric_limits<double>::max();
     double sum = 0, size = vertexes.size(), avg; 
+    double rms;
     for (Vertex *v : vertexes) {
         double cal = sqrt(tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())));
         sum += cal;
+        sqSum += pow(cal, 2);
         if (cal > max)
             max = cal;
     }
     avg = sum/size;
+    rms = sqrt(sqSum/size);
     cout << "Max distance: " << max << endl;
     cout << "Average distance: " << avg << endl;
+    cout << "RMS: " << rms << endl;
 
     double max2 = -std::numeric_limits<double>::max();
 

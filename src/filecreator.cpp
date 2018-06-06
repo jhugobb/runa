@@ -18,8 +18,8 @@ void FileCreator::createFile() {
             v->calculateNormal();
             QVector3D p = v->coords;
             QVector3D n = v->normal;
-            stream << "vn " << n.x() << " " << n.y() << " " << n.z() << endl;
             stream << "v " << p.x() << " " << p.y() << " " << p.z() << endl;
+            stream << "vn " << n.x() << " " << n.y() << " " << n.z() << endl;
         }
 
         for (Face *f : faces) {

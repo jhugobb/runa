@@ -3,7 +3,6 @@
 
 HalfEdge::HalfEdge() {
     cost = 0;
-    calculated = false;
 }
 
 double HalfEdge::calculateCost(double tolerance) {

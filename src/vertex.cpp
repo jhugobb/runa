@@ -32,13 +32,7 @@ void Vertex::calculateCost(double tolerance) {
     do {
         areaSum += curr->getArea();
         normalField = normalField + curr->getNormalField();
-        if (!false) {
-            costSum += curr->calculateCost(tolerance);
-            curr->calculated = true;
-            curr->twin->calculated = true;
-        } else
-            costSum += curr->cost;
-
+        costSum += curr->calculateCost(tolerance);
         curr = curr->twin->nextEdge;
     } while (curr != edge);
     cost = costSum + ((areaSum)-normalField.length());
@@ -96,8 +90,6 @@ QVector<Face *> Vertex::replaceWith(QVector3D newCoords, QVector<Face *> result,
             curr->face->changeEdges();
             result.append(curr->face);
         }
-        curr->calculated = false;
-        curr->twin->calculated = false;
         curr = curr->nextEdge->twin;
     } while (curr != he->twin);
 
@@ -112,6 +104,11 @@ QVector<Face *> Vertex::replaceWith(QVector3D newCoords, QVector<Face *> result,
 QVector<Vertex *> Vertex::recalculateCost(double tolerance, QVector<Vertex *> result) {
     for (Vertex *v : result) {
         v->calculateCost(tolerance);
+        HalfEdge *curr = v->edge;
+        do {
+            curr->face->recalculate();
+            curr = curr->twin->nextEdge;
+        } while (curr != v->edge);
     }
     return result;
 }

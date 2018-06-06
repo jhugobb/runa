@@ -13,7 +13,6 @@ class HalfEdge {
     HalfEdge *twin;
     HalfEdge *nextEdge;
     Face *face;
-    bool calculated;
     double cost;
     double calculateCost(double tolerance);
     double getArea();

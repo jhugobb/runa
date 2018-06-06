@@ -25,6 +25,7 @@ class Face {
     void recalculate();
     bool isDegenerate();
     void changeEdges();
+    bool reorientCoherently();
 };
 
 #endif  // FACE_H
