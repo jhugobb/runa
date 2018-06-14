@@ -121,7 +121,7 @@ int main(int argc, char *argv[]) {
     unsigned iterations = 1;
 
     while (faces.size() > numfaces || !refined) {
-        if (map.empty()) {
+        if (map.empty() || numfaces > faces.size()) {
             break;
         }
         iterations++;
