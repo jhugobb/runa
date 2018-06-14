@@ -163,6 +163,8 @@ int main(int argc, char *argv[]) {
 
         QVector<Vertex *> changed;
         changed = optimalVertex->getChanged();
+        changed = vi->getChanged();
+        changed.removeAll(optimalVertex);
 
         // TODO: fix this to not delete vertices for evaluation with same cost
         for (Vertex *v : changed) {
