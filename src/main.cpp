@@ -150,7 +150,7 @@ int main(int argc, char *argv[]) {
             optimalPoint = Eigen::Vector3d(vi->coords.x(), vi->coords.y(), vi->coords.z());
         } else {
             Eigen::Vector3d b = linear.second + linearI.second;
-            optimalPoint = A.colPivHouseholderQr().solve(b);
+            optimalPoint = A.fullPivLu().solve(b);
         }
         t = clock() - t;
         time_taken = ((double)t) / CLOCKS_PER_SEC;
@@ -166,7 +166,6 @@ int main(int argc, char *argv[]) {
         changed = vi->getChanged();
         changed.removeAll(optimalVertex);
 
-        // TODO: fix this to not delete vertices for evaluation with same cost
         for (Vertex *v : changed) {
             map.erase(v->cost);
         }
@@ -204,7 +203,7 @@ int main(int argc, char *argv[]) {
         totalTimeReorder += time_taken;
 
         t = clock();
-        for (unsigned i = 0; i < queue.size(); ++i) {
+        for (unsigned i = 0; i < queue.size(); i++) {
             if (map.find(queue[i]->cost) == map.end()) {
                 map.insert(pair<double, Vertex *>(queue[i]->cost, queue[i]));
                 queue.erase(queue.begin() + i);
