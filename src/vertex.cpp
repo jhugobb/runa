@@ -56,20 +56,19 @@ Vertex *Vertex::getOptimalEdge() {
     return result;
 }
 
-QPair<Eigen::Matrix3d, Eigen::Vector3d> Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result) {
+QPair<Eigen::Matrix3d, Eigen::Vector3d> Vertex::getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d> result, QVector<Face *> *facesVisited) {
     Eigen::Matrix3d resMatrix;  //A
     resMatrix << 0, 0, 0, 0, 0, 0, 0, 0, 0;
     Eigen::Vector3d resVector(0, 0, 0);  //b
-
     Eigen::Vector3d point(coords.x(), coords.y(), coords.z());
     HalfEdge *curr = edge;
     Face *f;
     do {
         f = curr->face;
-        Eigen::Vector3d norm(f->n.x(), f->n.y(), f->n.z());
-        Eigen::Matrix3d aj = (norm * norm.transpose());
-        resMatrix = resMatrix + aj;
-        resVector = resVector + (aj * point);
+            Eigen::Vector3d norm(f->n.x(), f->n.y(), f->n.z());
+            Eigen::Matrix3d aj = (norm * norm.transpose());
+            resMatrix = resMatrix + aj;
+            resVector = resVector + (aj * point);
         curr = curr->twin->nextEdge;
     } while (curr != edge);
 
@@ -87,7 +86,6 @@ QVector<Face *> Vertex::replaceWith(QVector3D newCoords, QVector<Face *> result,
         if (curr->twin->next != actual) curr->next = actual;
         curr->face->replace(this, actual);
         if (curr->face->isDegenerate()) {
-            curr->face->changeEdges();
             result.append(curr->face);
         }
         curr = curr->nextEdge->twin;

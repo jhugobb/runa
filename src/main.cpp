@@ -119,142 +119,138 @@ int main(int argc, char *argv[]) {
 
     bool refined = false;
     unsigned iterations = 1;
+    if (numfaces != 0) {
+        while (faces.size() > numfaces || !refined) {
+            if (map.empty()) {
+                break;
+            }
+            iterations++;
 
-    while (faces.size() > numfaces || !refined) {
-        if (map.empty() || numfaces > faces.size()) {
-            break;
+            t = clock();
+
+            Vertex *optimalVertex = (*map.begin()).second;
+            map.erase(map.begin());
+            Vertex *vi = optimalVertex->getOptimalEdge();
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeCalculation += time_taken;
+
+            if (vi == NULL) continue;
+            // Calculation of Optimal Point
+            t = clock();
+            QVector<Face *> *facesVisited = new QVector<Face *>;
+            QPair<Eigen::Matrix3d, Eigen::Vector3d> linear;
+            linear = optimalVertex->getLinearPair(linear, facesVisited);
+            QPair<Eigen::Matrix3d, Eigen::Vector3d> linearI;
+            linearI = vi->getLinearPair(linearI, facesVisited);
+
+            Eigen::Vector3d optimalPoint;
+            Eigen::Matrix3d A = linear.first + linearI.first;
+            if (abs(A.determinant()) < 0.0001) {
+                optimalPoint = Eigen::Vector3d(vi->coords.x(), vi->coords.y(), vi->coords.z());
+            } else {
+                Eigen::Vector3d b = linear.second + linearI.second;
+                optimalPoint = A.fullPivLu().solve(b);
+            }
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeEdge += time_taken;
+
+            QVector<Face *> facesToBeRemoved;
+            QVector3D optimalCoords = QVector3D(optimalPoint[0], optimalPoint[1], optimalPoint[2]);
+            // Edge collapse
+            t = clock();
+
+            QVector<Vertex *> changed;
+            changed = optimalVertex->getChanged();
+            changed = vi->getChanged();
+            changed.removeAll(optimalVertex);
+
+            for (Vertex *v : changed) {
+                map.erase(v->cost);
+            }
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeReorder += time_taken;
+
+            t = clock();
+
+            HalfEdge *edge = optimalVertex->getEdge(vi);
+            facesToBeRemoved = optimalVertex->replaceWith(optimalCoords, facesToBeRemoved, vi, edge);
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeReorder += time_taken;
+
+            t = clock();
+
+            for (Face *f : facesToBeRemoved) {
+                f->changeEdges();
+                faces.removeAll(f);
+            }
+            vertexes.removeAll(optimalVertex);
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeReorder += time_taken;
+
+            t = clock();
+
+            changed = vi->recalculateCost(tolerance, changed);
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeReorder += time_taken;
+
+            t = clock();
+            for (Vertex *v : changed) {
+                map.insert(pair<double, Vertex *>(v->cost, v));
+            }
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeReorder += time_taken;
+
+            t = clock();
+
+            double cal = sqrt(tree.squared_distance(K::Point_3(vi->coords.x(), vi->coords.y(), vi->coords.z())));
+            if (cal >= error)
+                refined = true;
+
+            t = clock() - t;
+            time_taken = ((double)t) / CLOCKS_PER_SEC;
+            totalTimeError += time_taken;
         }
-        iterations++;
 
-        t = clock();
-
-        Vertex *optimalVertex = (*map.begin()).second;
-        map.erase(map.begin());
-        Vertex *vi = optimalVertex->getOptimalEdge();
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeCalculation += time_taken;
-
-        if (vi == NULL) continue;
-        // Calculation of Optimal Point
-        t = clock();
-        QPair<Eigen::Matrix3d, Eigen::Vector3d> linear;
-        linear = optimalVertex->getLinearPair(linear);
-        QPair<Eigen::Matrix3d, Eigen::Vector3d> linearI;
-        linearI = vi->getLinearPair(linearI);
-
-        Eigen::Vector3d optimalPoint;
-        Eigen::Matrix3d A = linear.first + linearI.first;
-        if (abs(A.determinant()) < 0.01) {
-            optimalPoint = Eigen::Vector3d(vi->coords.x(), vi->coords.y(), vi->coords.z());
-        } else {
-            Eigen::Vector3d b = linear.second + linearI.second;
-            optimalPoint = A.fullPivLu().solve(b);
+        double sqSum = 0;
+        double max = -std::numeric_limits<double>::max();
+        double sum = 0, size = vertexes.size(), avg;
+        double rms;
+        for (Vertex *v : vertexes) {
+            double cal = sqrt(tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())));
+            sum += cal;
+            sqSum += pow(cal, 2);
+            if (cal > max)
+                max = cal;
         }
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeEdge += time_taken;
+        avg = sum / size;
+        rms = sqrt(sqSum / size);
+        cout << "Max distance: " << max << endl;
+        cout << "Average distance: " << avg << endl;
+        cout << "RMS: " << rms << endl;
 
-        QVector<Face *> facesToBeRemoved;
-        QVector3D optimalCoords = QVector3D(optimalPoint[0], optimalPoint[1], optimalPoint[2]);
-        // Edge collapse
-        t = clock();
+        double max2 = -std::numeric_limits<double>::max();
 
-        QVector<Vertex *> changed;
-        changed = optimalVertex->getChanged();
-        changed = vi->getChanged();
-        changed.removeAll(optimalVertex);
-
-        for (Vertex *v : changed) {
-            map.erase(v->cost);
-        }
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeReorder += time_taken;
-
-        t = clock();
-
-        HalfEdge *edge = optimalVertex->getEdge(vi);
-        facesToBeRemoved = optimalVertex->replaceWith(optimalCoords, facesToBeRemoved, vi, edge);
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeReorder += time_taken;
-
-        t = clock();
-
-        for (Face *f : facesToBeRemoved) {
-            f->changeEdges();
-            faces.removeAll(f);
-        }
-        vertexes.removeAll(optimalVertex);
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeReorder += time_taken;
-
-        t = clock();
-
-        changed = vi->recalculateCost(tolerance, changed);
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeReorder += time_taken;
-
-        t = clock();
-        for (unsigned i = 0; i < queue.size(); i++) {
-            if (map.find(queue[i]->cost) == map.end()) {
-                map.insert(pair<double, Vertex *>(queue[i]->cost, queue[i]));
-                queue.erase(queue.begin() + i);
+        for (Vertex *v : vertexes) {
+            double cal = sqrt(tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())));
+            if (cal != max && cal > max2) {
+                max2 = cal;
             }
         }
-        for (Vertex *v : changed) {
-            map.insert(pair<double, Vertex *>(v->cost, v));
-        }
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeReorder += time_taken;
-
-        t = clock();
-
-        double cal = sqrt(tree.squared_distance(K::Point_3(vi->coords.x(), vi->coords.y(), vi->coords.z())));
-        if (cal >= error)
-            refined = true;
-
-        t = clock() - t;
-        time_taken = ((double)t) / CLOCKS_PER_SEC;
-        totalTimeError += time_taken;
+        cout << "Max second distance: " << max2 << endl;
     }
-
-    double sqSum = 0;
-    double max = -std::numeric_limits<double>::max();
-    double sum = 0, size = vertexes.size(), avg; 
-    double rms;
-    for (Vertex *v : vertexes) {
-        double cal = sqrt(tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())));
-        sum += cal;
-        sqSum += pow(cal, 2);
-        if (cal > max)
-            max = cal;
-    }
-    avg = sum/size;
-    rms = sqrt(sqSum/size);
-    cout << "Max distance: " << max << endl;
-    cout << "Average distance: " << avg << endl;
-    cout << "RMS: " << rms << endl;
-
-    double max2 = -std::numeric_limits<double>::max();
-
-    for (Vertex *v : vertexes) {
-        double cal = sqrt(tree.squared_distance(K::Point_3(v->coords.x(), v->coords.y(), v->coords.z())));
-        if (cal != max && cal > max2) {
-            max2 = cal;
-        }
-    }
-    cout << "Max second distance: " << max2 << endl;
-
+    
     QString filename = QString(argv[1]);
     filename.replace(QString(".obj"), QString("-opt.obj"));
     FileCreator fileCreator = FileCreator(vertexes, faces, filename);

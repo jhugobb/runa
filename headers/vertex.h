@@ -22,7 +22,7 @@ class Vertex {
     void calculateCost(double tolerance);
     bool operator==(const Vertex &v2) const;
     Vertex *getOptimalEdge();
-    QPair<Eigen::Matrix3d, Eigen::Vector3d> getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>);
+    QPair<Eigen::Matrix3d, Eigen::Vector3d> getLinearPair(QPair<Eigen::Matrix3d, Eigen::Vector3d>, QVector<Face*>* facesVisited);
     QVector<Face *> replaceWith(QVector3D newCoords, QVector<Face *> result, Vertex *old, HalfEdge *he);
     QVector<Vertex *> recalculateCost(double tolerance, QVector<Vertex *> result);
     QVector<Vertex *> getChanged();
