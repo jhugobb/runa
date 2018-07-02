@@ -58,6 +58,7 @@ Thumbs.db
 *.opensdf
 *.vcxproj
 *vcxproj.*
+*.vscode*
 
 # MinGW generated files
 *.Debug
@@ -74,5 +75,8 @@ Thumbs.db
 #build folder
 build/*
 
+<<<<<<< 9a9ad43ad17d2b8f3a41e662df89b779290e2993
 #compressed files
 *.zip
+=======
+>>>>>>> update gitignore
